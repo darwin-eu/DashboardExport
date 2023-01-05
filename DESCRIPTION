@@ -1,0 +1,11 @@
+Package: DarwinExport
+Title: Export Achilles results for the DARWIN Catalogue
+Version: 0.0.0.9000
+Authors@R: 
+    person("Maxim", "Moinat", , "maxim.moinat@darwin-eu.org", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: Apache 2.0
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
