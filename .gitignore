@@ -58,3 +58,8 @@ rsconnect/
 
 # Project-specific
 output
+errorReportSql.txt
+
+# Mac
+.DS_store
+*.session.sql

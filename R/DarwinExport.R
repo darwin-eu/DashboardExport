@@ -82,9 +82,8 @@ darwinExport <- function(
 
     # TODO:
     # - provide with list of required analysis_ids
-    # - test with Catalogue import
 
-    # Log execution ----------------------------------------
+    # Log execution
     ParallelLogger::clearLoggers()
     unlink(file.path(outputFolder, "log_catalogueExport.txt"))
 
@@ -112,6 +111,16 @@ darwinExport <- function(
     )
     ParallelLogger::registerLogger(logger)
 
+    # Check whether Achilles output is available
+    if (!.checkAchillesTablesExist(connectionDetails, resultsDatabaseSchema, outputFolder)) {
+        ParallelLogger::logError("The output from the Achilles analyses is required.")
+        ParallelLogger::logError(sprintf(
+            "Please run Achilles first and make sure the resulting Achilles tables are in the given results schema ('%s').", # nolint
+            resultsDatabaseSchema)
+        )
+        return(NULL)
+    }
+
     # Ensure the export folder exists
     if (!file.exists(outputFolder)) {
         dir.create(outputFolder, recursive = TRUE)
@@ -127,6 +136,7 @@ darwinExport <- function(
                 dbms = connectionDetails$dbms,
                 warnOnMissingParameters = FALSE,
                 results_database_schema = resultsDatabaseSchema,
+                cdm_database_schema = cdmDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds
             )
@@ -150,4 +160,36 @@ darwinExport <- function(
             rm(connection)
         }
     )
+}
+
+.checkAchillesTablesExist <- function(connectionDetails, resultsDatabaseSchema, outputFolder) {
+  requiredAchillesTables <- c("achilles_analysis", "achilles_results", "achilles_results_dist")
+  achillesTablesExist <- tryCatch({
+    connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+    for (table in requiredAchillesTables) {
+      sql <- SqlRender::translate(
+               SqlRender::render(
+                 "SELECT COUNT(*) FROM @resultsDatabaseSchema.@table",
+                 resultsDatabaseSchema = resultsDatabaseSchema,
+                 table = table
+               ),
+               targetDialect = "postgresql"
+             )
+      DatabaseConnector::executeSql(
+        connection = connection,
+        sql = sql,
+        progressBar = FALSE,
+        reportOverallTime = FALSE
+      )
+    }
+    TRUE
+  },
+  error = function(e) {
+    FALSE
+  },
+  finally = {
+    DatabaseConnector::disconnect(connection = connection)
+    rm(connection)
+  })
+  return(achillesTablesExist)
 }
