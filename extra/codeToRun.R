@@ -1,4 +1,4 @@
-library(DarwinExport)
+library(DatabaseDashboardExport)
 
 dbms <- Sys.getenv("DBMS")
 user <- Sys.getenv("DB_USER")
@@ -16,7 +16,6 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
   pathToDriver = pathToDriver
 )
 
-cdmSourceName <- "Synthea20k"
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
 resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
 
@@ -24,5 +23,6 @@ DatabaseDashboardExport:::databaseDashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
-    outputFolder = "output"
+    outputFolder = "output",
+    exportMinimal = TRUE
 )
