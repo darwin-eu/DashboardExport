@@ -20,14 +20,14 @@
 # @author Maxim Moinat
 
 
-#' darwinExport
+#' databaseDashboardExport
 #'
 #' @description
-#' \code{DarwinExport} exports a set of descriptive statistics summary from the CDM,
+#' \code{databaseDashboardExport} exports a set of descriptive statistics summary from the CDM,
 #' to be uploaded in the Database Dashboard.
 #'
 #' @details
-#' \code{DarwinExport} exports the results from Achilles, stored in the achilles_results
+#' \code{databaseDashboardExport} exports the results from Achilles, stored in the achilles_results
 #' and achilles_results_dist tables, to a single csv file.
 #' This csv file can be uploaded to the Database Dashboard entry in the DARWIN-EU(R) Portal.
 #' There are two measures to prevent sharing of too detailed information:
@@ -68,7 +68,7 @@
 #' )
 #' }
 #' @export
-darwinExport <- function(
+databaseDashboardExport <- function(
     connectionDetails,
     cdmDatabaseSchema,
     resultsDatabaseSchema,

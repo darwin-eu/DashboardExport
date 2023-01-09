@@ -20,7 +20,7 @@ cdmSourceName <- "Synthea20k"
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
 resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
 
-DarwinExport:::darwinExport(
+DatabaseDashboardExport:::databaseDashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
