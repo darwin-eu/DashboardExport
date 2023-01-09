@@ -63,7 +63,7 @@
 #' results <- darwinExport(
 #'      connectionDetails = connectionDetails,
 #'      cdmDatabaseSchema = "cdm",
-#'      resultsDatabaseSchema="results",
+#'      resultsDatabaseSchema = "results",
 #'      outputFolder = "output"
 #' )
 #' }

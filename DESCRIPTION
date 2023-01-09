@@ -2,10 +2,15 @@ Package: DatabaseDashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
 Version: 0.0.0.9000
 Authors@R: 
-    person("Maxim", "Moinat", , "maxim.moinat@darwin-eu.org", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("Maxim", "Moinat", , "maxim.moinat@darwin-eu.org", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 License: Apache 2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
+Depends: R (>= 3.5.0)
+   DatabaseConnector (>= 3.0.0),
+   ParallelLogger
+Imports:
+    SqlRender,
+    readr
