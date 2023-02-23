@@ -94,8 +94,7 @@ FROM (
     stratum_4,
     stratum_5,
     count_value
-    FROM @results_database_schema.achilles_results 
-    where analysis_id not in (430,630,730,830,1830,2130) -- re-implemented below
+    FROM @results_database_schema.achilles_results
 
     UNION ALL
 
