@@ -20,14 +20,14 @@
 # @author Maxim Moinat
 
 
-#' databaseDashboardExport
+#' dashboardExport
 #'
 #' @description
-#' \code{databaseDashboardExport} exports a set of descriptive statistics summary from the CDM,
+#' \code{dashboardExport} exports a set of descriptive statistics summary from the CDM,
 #' to be uploaded in the Database Dashboard.
 #'
 #' @details
-#' \code{databaseDashboardExport} exports the results from Achilles, stored in the achilles_results
+#' \code{dashboardExport} exports the results from Achilles, stored in the achilles_results
 #' and achilles_results_dist tables, to a single csv file.
 #' This csv file can be uploaded to the Database Dashboard entry in the DARWIN-EU(R) Portal.
 #' There are two measures to prevent sharing of too detailed information:
@@ -60,7 +60,7 @@
 #' \dontrun{
 #' connectionDetails <- createConnectionDetails(dbms="sql server", server="some_server")
 #' # Run Achilles
-#' results <- darwinExport(
+#' results <- dashboardExport(
 #'      connectionDetails = connectionDetails,
 #'      cdmDatabaseSchema = "cdm",
 #'      resultsDatabaseSchema = "results",
@@ -68,7 +68,7 @@
 #' )
 #' }
 #' @export
-databaseDashboardExport <- function(
+dashboardExport <- function(
     connectionDetails,
     cdmDatabaseSchema,
     resultsDatabaseSchema,
@@ -119,7 +119,7 @@ databaseDashboardExport <- function(
     analysisIds <- NULL
     if (exportMinimal) {
         analysisIds <- read.csv(
-            system.file("csv", "required_analysis_ids.csv", package = "DarwinExport"),
+            system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
             stringsAsFactors = FALSE
         )$analysis_id
     }
@@ -130,7 +130,7 @@ databaseDashboardExport <- function(
             # Obtain the data from the results tables
             sql <- SqlRender::loadRenderTranslateSql(
                 sqlFilename = "export.sql",
-                packageName = "DarwinExport",
+                packageName = "DashboardExport",
                 dbms = connectionDetails$dbms,
                 warnOnMissingParameters = FALSE,
                 results_database_schema = resultsDatabaseSchema,

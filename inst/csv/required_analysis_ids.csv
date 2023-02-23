@@ -23,7 +23,7 @@ analysis_id,description,used_in_materialized_view,source
 403,Number of distinct condition occurrence concepts per person,"number_of_distinct_per_person,number_of_distinct_per_person",analysis_results_dist
 405,"Number of condition occurrence records, by condition_concept_id by condition_type_concept_id","data_provenance,data_provenance,data_provenance",analysis_results
 420,Number of condition occurrence records by condition occurrence start month,"data_density,records_per_person",analysis_results
-430,Number of condition_occurrence records inside a valid observation period,"concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
+430,"Number of descendant condition occurrence records,by condition_concept_id","concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 501,"Number of records of death, by cause_concept_id","avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records",analysis_results
 502,Number of persons by death month,"data_density,records_per_person",analysis_results
 600,"Number of persons with at least one procedure occurrence, by procedure_concept_id",domain_filter,analysis_results
@@ -31,19 +31,19 @@ analysis_id,description,used_in_materialized_view,source
 603,Number of distinct procedure occurrence concepts per person,"number_of_distinct_per_person,number_of_distinct_per_person",analysis_results_dist
 605,"Number of procedure occurrence records, by procedure_concept_id by procedure_type_concept_id","data_provenance,data_provenance,data_provenance",analysis_results
 620,Number of procedure occurrence records  by procedure occurrence start month,"data_density,records_per_person",analysis_results
-630,Number of procedure_occurrence records inside a valid observation period,"concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
+630,"Number of descendant procedure occurrence records,by procedure_concept_id","concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 700,"Number of persons with at least one drug exposure, by drug_concept_id",domain_filter,analysis_results
 701,"Number of drug exposure records, by drug_concept_id","avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,domain_filter,concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 703,Number of distinct drug exposure concepts per person,"number_of_distinct_per_person,number_of_distinct_per_person",analysis_results_dist
 705,"Number of drug exposure records, by drug_concept_id by drug_type_concept_id","data_provenance,data_provenance,data_provenance",analysis_results
 720,Number of drug exposure records  by drug exposure start month,"data_density,records_per_person",analysis_results
-730,Number of drug_exposure records inside a valid observation period,"concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
+730,"Number of descendant drug exposure records, by drug_concept_id","concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 800,"Number of persons with at least one observation occurrence, by observation_concept_id",domain_filter,analysis_results
 801,"Number of observation occurrence records, by observation_concept_id","avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,domain_filter,concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 803,Number of distinct observation occurrence concepts per person,"number_of_distinct_per_person,number_of_distinct_per_person",analysis_results_dist
 805,"Number of observation occurrence records, by observation_concept_id by observation_type_concept_id","data_provenance,data_provenance,data_provenance",analysis_results
 820,Number of observation records  by observation start month,"data_density,records_per_person",analysis_results
-830,Number of observation records inside a valid observation period,"concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
+830,"Number of descendant observation occurrence records, by observation_concept_id","concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 901,"Number of drug era records, by drug_concept_id",domain_filter,analysis_results
 920,Number of drug era records by drug era start month,"data_density,records_per_person",analysis_results
 1001,"Number of condition era records, by condition_concept_id",domain_filter,analysis_results
@@ -53,10 +53,10 @@ analysis_id,description,used_in_materialized_view,source
 1803,Number of distinct mesurement occurrence concepts per person,number_of_distinct_per_person,analysis_results
 1805,"Number of measurement occurrence records, by measurement_concept_id by measurement_type_concept_id","data_provenance,data_provenance,data_provenance",analysis_results
 1820,Number of measurement records  by measurement start month,"data_density,records_per_person",analysis_results
-1830,Number of visit_detail records inside a valid observation period,"concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
+1830,"Number of descendant measurement occurrence records, by measurement_concept_id","concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 2101,"Number of device exposure records, by device_concept_id","avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 2105,"Number of device exposure records, by device_concept_id by device_type_concept_id","data_provenance,data_provenance,data_provenance",analysis_results
 2120,Number of device_exposure records outside valid observation period,"data_density,records_per_person",analysis_results
-2130,Number of device_exposure records inside a valid observation period,"concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
+2130,"Number of descendant device exposure records, by device_concept_id","concept_browser_table3,concept_coverage2,concept_browser_table2",analysis_results
 2201,"Number of note records, by note_type_concept_id","avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records",analysis_results
 5000,,meta_data_table,custom
