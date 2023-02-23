@@ -89,13 +89,6 @@ FROM (
     UNION ALL
 
     -- 430	Number of descendant condition occurrence records,by condition_concept_id
-    WITH CTE_CONDITION AS (
-        SELECT ca.ANCESTOR_CONCEPT_ID AS CONCEPT_ID, COUNT_BIG(*) AS DRC
-        FROM @cdmDatabaseSchema.CONDITION_OCCURRENCE co
-        JOIN @cdmDatabaseSchema.CONCEPT_ANCESTOR ca
-            ON ca.DESCENDANT_CONCEPT_ID = co.CONDITION_CONCEPT_ID
-        GROUP BY ca.ANCESTOR_CONCEPT_ID
-    )
     SELECT
         430 as analysis_id,
         CAST(co.CONDITION_CONCEPT_ID AS VARCHAR(255)) AS stratum_1,
@@ -104,21 +97,20 @@ FROM (
         cast(null as varchar(255)) as stratum_4,
         cast(null as varchar(255)) as stratum_5,
         c.DRC as count_value
-    FROM @cdmDatabaseSchema.CONDITION_OCCURRENCE co
-    JOIN CTE_CONDITION c
+    FROM @cdm_database_schema.CONDITION_OCCURRENCE co
+    JOIN (
+        SELECT ca.ANCESTOR_CONCEPT_ID AS CONCEPT_ID, COUNT_BIG(*) AS DRC
+        FROM @cdm_database_schema.CONDITION_OCCURRENCE co
+        JOIN @cdm_database_schema.CONCEPT_ANCESTOR ca
+            ON ca.DESCENDANT_CONCEPT_ID = co.CONDITION_CONCEPT_ID
+        GROUP BY ca.ANCESTOR_CONCEPT_ID
+    ) c
         ON c.CONCEPT_ID = co.CONDITION_CONCEPT_ID
     GROUP BY co.CONDITION_CONCEPT_ID, c.DRC
 
     UNION ALL
 
     -- 630	Number of descendant procedure occurrence records, by procedure_concept_id
-    WITH CTE_procedure AS (
-        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
-        FROM @cdmDatabaseSchema.procedure_occurrence co
-        JOIN @cdmDatabaseSchema.concept_ancestor ca
-            ON ca.descendant_concept_id = co.procedure_concept_id
-        GROUP BY ca.ancestor_concept_id
-    )
     SELECT
         630 as analysis_id,
         CAST(co.procedure_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -127,21 +119,20 @@ FROM (
         cast(null as varchar(255)) as stratum_4,
         cast(null as varchar(255)) as stratum_5,
         c.DRC as count_value
-    FROM @cdmDatabaseSchema.procedure_occurrence co
-    JOIN CTE_procedure c
+    FROM @cdm_database_schema.procedure_occurrence co
+    JOIN (
+        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
+        FROM @cdm_database_schema.procedure_occurrence co
+        JOIN @cdm_database_schema.concept_ancestor ca
+            ON ca.descendant_concept_id = co.procedure_concept_id
+        GROUP BY ca.ancestor_concept_id
+    ) c
         ON c.concept_id = co.procedure_concept_id
     GROUP BY co.procedure_concept_id, c.DRC
 
     UNION ALL
 
     -- 730	Number of descendant drug exposure records, by drug_concept_id
-    WITH CTE_procedure AS (
-        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
-        FROM @cdmDatabaseSchema.drug_exposure co
-        JOIN @cdmDatabaseSchema.concept_ancestor ca
-            ON ca.descendant_concept_id = co.drug_concept_id
-        GROUP BY ca.ancestor_concept_id
-    )
     SELECT
         730 as analysis_id,
         CAST(co.drug_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -150,21 +141,20 @@ FROM (
         cast(null as varchar(255)) as stratum_4,
         cast(null as varchar(255)) as stratum_5,
         c.DRC as count_value
-    FROM @cdmDatabaseSchema.drug_exposure co
-    JOIN CTE_procedure c
+    FROM @cdm_database_schema.drug_exposure co
+    JOIN (
+        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
+        FROM @cdm_database_schema.drug_exposure co
+        JOIN @cdm_database_schema.concept_ancestor ca
+            ON ca.descendant_concept_id = co.drug_concept_id
+        GROUP BY ca.ancestor_concept_id
+    ) c
         ON c.concept_id = co.drug_concept_id
     GROUP BY co.drug_concept_id, c.DRC
 
     UNION ALL
 
     -- 830	Number of descendant observation occurrence records, by observation_concept_id
-    WITH CTE_procedure AS (
-        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
-        FROM @cdmDatabaseSchema.observation co
-        JOIN @cdmDatabaseSchema.concept_ancestor ca
-            ON ca.descendant_concept_id = co.observation_concept_id
-        GROUP BY ca.ancestor_concept_id
-    )
     SELECT
         830 as analysis_id,
         CAST(co.observation_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -173,21 +163,20 @@ FROM (
         cast(null as varchar(255)) as stratum_4,
         cast(null as varchar(255)) as stratum_5,
         c.DRC as count_value
-    FROM @cdmDatabaseSchema.observation co
-    JOIN CTE_procedure c
+    FROM @cdm_database_schema.observation co
+    JOIN (
+        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
+        FROM @cdm_database_schema.observation co
+        JOIN @cdm_database_schema.concept_ancestor ca
+            ON ca.descendant_concept_id = co.observation_concept_id
+        GROUP BY ca.ancestor_concept_id
+    ) c
         ON c.concept_id = co.observation_concept_id
     GROUP BY co.observation_concept_id, c.DRC
 
     UNION ALL
 
     -- 1830	Number of descendant measurement occurrence records, by measurement_concept_id
-    WITH CTE_procedure AS (
-        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
-        FROM @cdmDatabaseSchema.measurement co
-        JOIN @cdmDatabaseSchema.concept_ancestor ca
-            ON ca.descendant_concept_id = co.measurement_concept_id
-        GROUP BY ca.ancestor_concept_id
-    )
     SELECT
         1830 as analysis_id,
         CAST(co.measurement_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -196,21 +185,20 @@ FROM (
         cast(null as varchar(255)) as stratum_4,
         cast(null as varchar(255)) as stratum_5,
         c.DRC as count_value
-    FROM @cdmDatabaseSchema.measurement co
-    JOIN CTE_procedure c
+    FROM @cdm_database_schema.measurement co
+    JOIN (
+        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
+        FROM @cdm_database_schema.measurement co
+        JOIN @cdm_database_schema.concept_ancestor ca
+            ON ca.descendant_concept_id = co.measurement_concept_id
+        GROUP BY ca.ancestor_concept_id
+    ) c
         ON c.concept_id = co.measurement_concept_id
     GROUP BY co.measurement_concept_id, c.DRC
 
     UNION ALL
 
     -- 2130	Number of descendant device exposure records, by device_concept_id
-    WITH CTE_procedure AS (
-        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
-        FROM @cdmDatabaseSchema.device_exposure co
-        JOIN @cdmDatabaseSchema.concept_ancestor ca
-            ON ca.descendant_concept_id = co.device_concept_id
-        GROUP BY ca.ancestor_concept_id
-    )
     SELECT
         2130 as analysis_id,
         CAST(co.device_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -219,8 +207,14 @@ FROM (
         cast(null as varchar(255)) as stratum_4,
         cast(null as varchar(255)) as stratum_5,
         c.DRC as count_value
-    FROM @cdmDatabaseSchema.device_exposure co
-    JOIN CTE_procedure c
+    FROM @cdm_database_schema.device_exposure co
+    JOIN (
+        SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
+        FROM @cdm_database_schema.device_exposure co
+        JOIN @cdm_database_schema.concept_ancestor ca
+            ON ca.descendant_concept_id = co.device_concept_id
+        GROUP BY ca.ancestor_concept_id
+    ) c
         ON c.concept_id = co.device_concept_id
     GROUP BY co.device_concept_id, c.DRC
 ) ar

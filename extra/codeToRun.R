@@ -1,4 +1,4 @@
-library(DatabaseDashboardExport)
+library(DashboardExport)
 
 dbms <- Sys.getenv("DBMS")
 user <- Sys.getenv("DB_USER")
@@ -18,11 +18,12 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
 resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
+outputFolder <- "output2"
 
-DatabaseDashboardExport:::databaseDashboardExport(
+DashboardExport:::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
-    outputFolder = "output",
+    outputFolder = outputFolder,
     exportMinimal = TRUE
 )
