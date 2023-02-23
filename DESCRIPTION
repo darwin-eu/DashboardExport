@@ -1,4 +1,4 @@
-Package: DatabaseDashboardExport
+Package: DashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
 Version: 0.0.0.9000
 Authors@R: 
