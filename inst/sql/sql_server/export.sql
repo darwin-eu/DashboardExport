@@ -83,7 +83,18 @@ SELECT
     cast(null as float) P75_value,
     cast(null as float) p90_value
 FROM (
-    SELECT * FROM @results_database_schema.achilles_results 
+    SELECT 
+    CASE 
+        WHEN analysis_id in (430,630,730,830,1830,2130) THEN analysis_id + 10 
+        ELSE analysis_id 
+    END as analysis_id,
+    stratum_1,
+    stratum_2,
+    stratum_3,
+    stratum_4,
+    stratum_5,
+    count_value
+    FROM @results_database_schema.achilles_results 
     where analysis_id not in (430,630,730,830,1830,2130) -- re-implemented below
 
     UNION ALL
