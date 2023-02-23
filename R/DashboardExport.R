@@ -1,8 +1,8 @@
-# @file CatalogueExport
+# @file DashboardExport
 #
 # Copyright 2023 DARWIN-EU (R)
 #
-# This file is part of CatalogueExport and is based on OHDSI's Achilles
+# This file is part of the DashboardExport package
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ dashboardExport <- function(
     }
 
     logger <- ParallelLogger::createLogger(
-        name = "catalogueExport",
+        name = "dashboardExport",
         threshold = "INFO",
         appenders = appenders
     )
@@ -146,7 +146,7 @@ dashboardExport <- function(
             )
 
             # Save the data to the export folder
-            outputPath <- file.path(outputFolder, sprintf("dashboard_export_%s.csv", Sys.Date()))
+            outputPath <- file.path(outputFolder, sprintf("dashboard_export_%s.csv", format(Sys.time(), "%Y-%m-%dT%X")))
             readr::write_csv(results, outputPath)
             ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
         },
