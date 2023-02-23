@@ -136,7 +136,8 @@ dashboardExport <- function(
                 results_database_schema = resultsDatabaseSchema,
                 cdm_database_schema = cdmDatabaseSchema,
                 min_cell_count = smallCellCount,
-                analysis_ids = analysisIds
+                analysis_ids = analysisIds,
+                package_version = packageVersion(pkg = "DashboardExport")
             )
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist")
             results <- DatabaseConnector::querySql(
