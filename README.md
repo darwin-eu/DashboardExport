@@ -1,10 +1,10 @@
-# DatabaseDashboardExport
+# DashboardExport
 Export descriptive statistics from Achilles for the DARWIN-EU Database Dashboard.
 
 ## How to execute
-1. Install [Achilles](https://github.com/OHDSI/Achilles) and DatabaseDashboardExport.
+1. Install [Achilles](https://github.com/OHDSI/Achilles) and DashboardExport.
 2. Run Achilles. See [this guide](https://ohdsi.github.io/Achilles/articles/RunningAchilles.html) for detailed instructions
-3. Run DatabaseDashboardExport, providing the schema where the Achilles results are located.
+3. Run DashboardExport, providing the schema where the Achilles results are located.
 
 One csv file will be written to the given output folder. This file can be uploaded to the DARWIN-EU Database Dashboard.
 
@@ -12,9 +12,9 @@ One csv file will be written to the given output folder. This file can be upload
 ```R
 #install.packages("remotes")
 #remotes::install_github('ohdsi/Achilles')
-#remotes::install_github('darwin-eu/DatabaseDashboardExport')
+#remotes::install_github('darwin-eu/DashboardExport')
 library(Achilles)
-library(DatabaseDashboardExport)
+library(DashboardExport)
 
 dbms <- Sys.getenv("DBMS")
 user <- Sys.getenv("DB_USER")
@@ -42,7 +42,7 @@ Achilles::achilles(
     outputFolder = "achilles_output"
 )
 
-DatabaseDashboardExport:::databaseDashboardExport(
+DashboardExport:::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
