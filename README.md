@@ -1,5 +1,7 @@
 # DashboardExport
-Export descriptive statistics from Achilles for the DARWIN-EU Database Dashboard.
+Export descriptive statistics from a subset of Achilles results for the DARWIN-EU Database Dashboard.
+All counts are rounded up to nearest hundred and counts below the `smallCellCount` are not exported.
+For an overview of the exported Achilles analyses, see [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv).
 
 ## How to execute
 1. Install [Achilles](https://github.com/OHDSI/Achilles) and DashboardExport.
@@ -46,14 +48,10 @@ DashboardExport:::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
-    outputFolder = "output"
+    outputFolder = "output",
+    smallCellCount = 5
 )
 ```
-
-## Minimal export for Database Dashboard
-The export method has an optional argument `exportMinimal`, which defaults to TRUE.
-If there are issues with exporting all Achilles analyses, with this toggle you can only export the results that are needed for the Database Dashboard.
-For an overview of these required analyses, see [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv).
 
 ## Technical description
 This package runs one sql script that unions the records from the `achilles_results` and `achilles_results_dist` tables.

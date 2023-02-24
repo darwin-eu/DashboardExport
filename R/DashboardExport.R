@@ -47,10 +47,6 @@
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example 'results.dbo'.
 #'                                 Default = \code{cdmDatabaseSchema}.
-#' @param exportMinimal		       (OPTIONAL) If set to TRUE, only the Achilles analysis results that are
-#'                                 required for the Database Dashboard are exported.
-#'                                 If not specified, all Achilles analysis results will be exported.
-#'                                 Default = FALSE
 #' @param smallCellCount           To avoid patient identifiability, cells with small counts
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
@@ -73,7 +69,6 @@ dashboardExport <- function(
     cdmDatabaseSchema,
     resultsDatabaseSchema,
     vocabDatabaseSchema = cdmDatabaseSchema,
-    exportMinimal = FALSE,
     smallCellCount = 5,
     outputFolder = "output",
     verboseMode = TRUE)
@@ -116,13 +111,10 @@ dashboardExport <- function(
     }
 
     # Get analysis ids
-    analysisIds <- NULL
-    if (exportMinimal) {
-        analysisIds <- read.csv(
-            system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
-            stringsAsFactors = FALSE
-        )$analysis_id
-    }
+    analysisIds <- read.csv(
+        system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
+        stringsAsFactors = FALSE
+    )$analysis_id
 
     # Query and write achilles results
     connection <- DatabaseConnector::connect(connectionDetails)

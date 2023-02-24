@@ -24,6 +24,5 @@ DashboardExport:::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
-    outputFolder = outputFolder,
-    exportMinimal = FALSE
+    outputFolder = outputFolder
 )

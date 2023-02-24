@@ -9,7 +9,6 @@ dashboardExport(
   cdmDatabaseSchema,
   resultsDatabaseSchema,
   vocabDatabaseSchema = cdmDatabaseSchema,
-  exportMinimal = FALSE,
   smallCellCount = 5,
   outputFolder = "output",
   verboseMode = TRUE
@@ -31,11 +30,6 @@ so for example, on SQL Server, 'cdm_results.dbo'.}
 On SQL Server, this should specifiy both the database and the schema,
 so for example 'results.dbo'.
 Default = \code{cdmDatabaseSchema}.}
-
-\item{exportMinimal}{(OPTIONAL) If set to TRUE, only the Achilles analysis results that are
-required for the Database Dashboard are exported.
-If not specified, all Achilles analysis results will be exported.
-Default = FALSE}
 
 \item{smallCellCount}{To avoid patient identifiability, cells with small counts
 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
