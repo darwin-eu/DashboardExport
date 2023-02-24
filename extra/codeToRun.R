@@ -18,12 +18,13 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
 resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
-outputFolder <- "output2"
+outputFolder <- "output"
+sourceName <- "Synthea20k"
 
 DashboardExport:::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
     outputFolder = outputFolder,
-    exportMinimal = FALSE
+    sourceName = sourceName
 )
