@@ -51,6 +51,7 @@
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
 #' @param outputFolder             Path to store logs and SQL files
+#' @param sourceName               Name of the source, used in the filename exported
 #' @param verboseMode              Boolean to determine if the console will show all execution steps. Default = TRUE
 #' @examples
 #' \dontrun{
@@ -60,7 +61,8 @@
 #'      connectionDetails = connectionDetails,
 #'      cdmDatabaseSchema = "cdm",
 #'      resultsDatabaseSchema = "results",
-#'      outputFolder = "output"
+#'      outputFolder = "output",
+#'      sourceName = "MyName"
 #' )
 #' }
 #' @export
@@ -71,6 +73,7 @@ dashboardExport <- function(
     vocabDatabaseSchema = cdmDatabaseSchema,
     smallCellCount = 5,
     outputFolder = "output",
+    sourceName = NULL,
     verboseMode = TRUE)
 {
     # Setup loggers
@@ -110,7 +113,7 @@ dashboardExport <- function(
         dir.create(outputFolder, recursive = TRUE)
     }
 
-    # Get analysis ids
+    # Get Achilles analysis ids to export
     analysisIds <- read.csv(
         system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
         stringsAsFactors = FALSE
@@ -138,7 +141,7 @@ dashboardExport <- function(
             )
 
             # Save the data to the export folder
-            outputPath <- file.path(outputFolder, sprintf("dashboard_export_%s.csv", format(Sys.time(), "%Y-%m-%dT%X")))
+            outputPath <- file.path(outputFolder, sprintf("dashboard_export_%s_%s.csv", sourceName, format(Sys.time(), "%Y%m%d")))
             readr::write_csv(results, outputPath)
             ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
         },
