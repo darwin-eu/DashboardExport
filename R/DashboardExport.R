@@ -114,10 +114,7 @@ dashboardExport <- function(
     }
 
     # Get Achilles analysis ids to export
-    analysisIds <- read.csv(
-        system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
-        stringsAsFactors = FALSE
-    )$analysis_id
+    analysisIds <- getRequiredAnalysisIds()
 
     # Query and write achilles results
     connection <- DatabaseConnector::connect(connectionDetails)
@@ -187,4 +184,11 @@ dashboardExport <- function(
     rm(connection)
   })
   return(achillesTablesExist)
+}
+
+getRequiredAnalysisIds <- function() {
+    read.csv(
+        system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
+        stringsAsFactors = FALSE
+    )$analysis_id
 }

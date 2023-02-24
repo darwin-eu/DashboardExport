@@ -41,10 +41,11 @@ Achilles::achilles(
     connectionDetails = connectionDetails, 
     cdmDatabaseSchema = cdmDatabaseSchema, 
     resultsDatabaseSchema = resultsDatabaseSchema, 
-    outputFolder = "achilles_output"
+    outputFolder = "achilles_output",
+    analysisIds = DashboardExport::getRequiredAnalysisIds()
 )
 
-DashboardExport:::dashboardExport(
+DashboardExport::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
