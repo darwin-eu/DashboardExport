@@ -21,7 +21,7 @@ resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
 outputFolder <- "output"
 sourceName <- "Synthea20k"
 
-DashboardExport:::dashboardExport(
+DashboardExport::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
