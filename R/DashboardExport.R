@@ -108,10 +108,11 @@ dashboardExport <- function(
         return(NULL)
     }
 
-    # Check whether results for required Achilles analyses is available
-    analysisIdsRequired <- getRequiredAnalysisIds()
+    # Check whether results for required Achilles analyses is available. 
+    # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
+    expectedAnalysisIds <- c(0,1,2,3,101,102,103,105,108,110,111,113,117,400,401,403,405,420,700,701,703,705,720)
     analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, resultsDatabaseSchema)
-    missingAnalysisIds <- setdiff(analysisIdsRequired, analysisIdsAvailable)
+    missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
     if (length(missingAnalysisIds) > 0) {
         ParallelLogger::logError(sprintf("Missing Achilles analysis ids in result tables: %s.", paste(missingAnalysisIds, collapse=", ")))
         ParallelLogger::logInfo("Please rerun Achilles including above analyses.")
@@ -121,7 +122,7 @@ dashboardExport <- function(
     # Display Achilles metadata
     achillesMetadata <- .getAchillesMetadata(connectionDetails, resultsDatabaseSchema)
     ParallelLogger::logInfo(sprintf(
-        "Running DashboardExport, exporting data from Achilles (v%s) results executed on %s for %s (n=%dk).",
+        "Running DashboardExport, exporting data from Achilles v%s, executed on %s for '%s' (n=%dk).",
         achillesMetadata$ACHILLES_VERSION,
         achillesMetadata$ACHILLES_EXECUTION_DATE,
         achillesMetadata$ACHILLES_SOURCE_NAME,
@@ -152,7 +153,7 @@ dashboardExport <- function(
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
             results <- DatabaseConnector::querySql(
                 connection = connection,
-                sql = sql
+                sql = sql   
             )
 
             # Save the data to the export folder
