@@ -108,6 +108,7 @@ dashboardExport <- function(
         return(NULL)
     }
 
+    # Check whether results for required Achilles analyses is available
     analysisIdsRequired <- getRequiredAnalysisIds()
     analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, resultsDatabaseSchema)
     missingAnalysisIds <- setdiff(analysisIdsRequired, analysisIdsAvailable)
@@ -117,6 +118,15 @@ dashboardExport <- function(
         return(NULL)
     }
 
+    # Display Achilles metadata
+    achillesMetadata <- .getAchillesMetadata(connectionDetails, resultsDatabaseSchema)
+    ParallelLogger::logInfo(sprintf(
+        "Running DashboardExport, exporting data from Achilles (v%s) results executed on %s for %s (n=%dk).",
+        achillesMetadata$ACHILLES_VERSION,
+        achillesMetadata$ACHILLES_EXECUTION_DATE,
+        achillesMetadata$ACHILLES_SOURCE_NAME,
+        achillesMetadata$PERSON_COUNT_THOUSANDS
+    ))
 
     # Create the export folder if it does not exist
     if (!file.exists(outputFolder)) {
@@ -139,7 +149,7 @@ dashboardExport <- function(
                 analysis_ids = analysisIds,
                 package_version = packageVersion(pkg = "DashboardExport")
             )
-            ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist")
+            ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
             results <- DatabaseConnector::querySql(
                 connection = connection,
                 sql = sql
