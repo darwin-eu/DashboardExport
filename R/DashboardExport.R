@@ -133,6 +133,10 @@ dashboardExport <- function(
     if (!file.exists(outputFolder)) {
         dir.create(outputFolder, recursive = TRUE)
     }
+    
+    if (is.null(sourceName)) {
+        sourceName <- .getSourceName(connectionDetails, cdmDatabaseSchema)
+    }
 
     analysisIds <- getAnalysisIdsToExport()
 
@@ -277,4 +281,23 @@ getRequiredAnalysisIds <- function() {
             rm(connection)
         }
     )
+}
+
+.getSourceName <- function(connectionDetails, cdmDatabaseSchema) {
+  sql <- SqlRender::render(
+    sql = "select cdm_source_name from @cdmDatabaseSchema.cdm_source",
+    cdmDatabaseSchema = cdmDatabaseSchema
+  )
+  sql <- SqlRender::translate(sql = sql, targetDialect = connectionDetails$dbms)
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  sourceName <- tryCatch({
+    s <- DatabaseConnector::querySql(connection = connection, sql = sql)
+    s[1, ]
+  }, error = function(e) {
+    ""
+  }, finally = {
+    DatabaseConnector::disconnect(connection = connection)
+    rm(connection)
+  })
+  sourceName
 }
