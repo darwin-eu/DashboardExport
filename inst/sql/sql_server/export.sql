@@ -1,6 +1,6 @@
 -- Export achilles results
 -- Combines regular and _dist results into one output.
--- Adds package-specific analyses 0,430,630,730,830,1830,2130,5000
+-- Adds package-specific analyses 0,430,630,707,708,730,830,1830,2130,5000
 
 SELECT 
     analysis_id,
@@ -35,7 +35,7 @@ FROM (
 
     SELECT 
     CASE 
-        WHEN analysis_id in (430,630,730,830,1830,2130) THEN analysis_id + 10 
+        WHEN analysis_id in (430,630,707,708,730,830,1830,2130) THEN analysis_id + 10
         ELSE analysis_id 
     END as analysis_id,
     stratum_1,
@@ -90,7 +90,46 @@ FROM (
     ) c
         ON c.concept_id = co.procedure_concept_id
     GROUP BY co.procedure_concept_id, c.DRC
+    
+    -- 707	Number of drug occurrence records, by route_concept_id
+    SELECT 
+    	707 AS analysis_id,
+    	CAST(de.route_concept_id AS VARCHAR(255)) AS stratum_1,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_2,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_3,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_4,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_5,
+    	COUNT_BIG(de.person_id) AS count_value
+    FROM 
+    	@cdmDatabaseSchema.drug_exposure de
+    JOIN @cdmDatabaseSchema.observation_period op 
+        ON de.person_id = op.person_id
+        AND de.drug_exposure_start_date >= op.observation_period_start_date
+        AND de.drug_exposure_start_date <= op.observation_period_end_date
+        GROUP BY de.route_concept_id;
 
+    UNION ALL
+    
+    -- 708 Number of drug exposure records, by drug_concept_id by route_concept_id
+    SELECT 
+    	708 AS analysis_id,
+    	CAST(de.drug_concept_id AS VARCHAR(255)) AS stratum_1,
+    	CAST(de.route_concept_id AS VARCHAR(255)) AS stratum_2,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_3,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_4,
+    	CAST(NULL AS VARCHAR(255)) AS stratum_5,
+    	COUNT_BIG(de.person_id) AS count_value
+    FROM 
+    	@cdmDatabaseSchema.drug_exposure de
+    JOIN 
+    	@cdmDatabaseSchema.observation_period op 
+        ON de.person_id = op.person_id
+        AND de.drug_exposure_start_date >= op.observation_period_start_date
+        AND de.drug_exposure_start_date <= op.observation_period_end_date
+        GROUP BY 
+        	de.drug_concept_id,
+        	de.route_concept_id;
+    
     UNION ALL
 
     -- 730	Number of descendant drug exposure records, by drug_concept_id
