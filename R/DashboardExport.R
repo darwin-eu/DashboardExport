@@ -138,6 +138,17 @@ dashboardExport <- function(
         sourceName <- .getSourceName(connectionDetails, cdmDatabaseSchema)
     }
 
+    # Retrieve custom analyses
+    custom_analysis_files <- list.files(system.file('sql/sql_server/analyses', 'DashboardExport'), pattern = '*.sql')
+    custom_analysis_sqls <- sapply(custom_analysis_files, function(x) {
+        SqlRender::loadRenderTranslateSql(
+            sqlFilename = file.path('analyses', x),
+            packageName = "DashboardExport",
+            dbms = connectionDetails$dbms,
+            cdm_database_schema = cdmDatabaseSchema
+        )
+        })
+
     analysisIds <- getAnalysisIdsToExport()
 
     # Query and write achilles results
@@ -152,6 +163,7 @@ dashboardExport <- function(
                 cdm_database_schema = cdmDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
+                custom_analyses = paste(custom_analysis_sqls, collapse = '\nUNION ALL\n'),
                 package_version = packageVersion(pkg = "DashboardExport")
             )
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
