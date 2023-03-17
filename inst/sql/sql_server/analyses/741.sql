@@ -14,6 +14,7 @@ JOIN
     ON de.person_id = op.person_id
     AND de.drug_exposure_start_date >= op.observation_period_start_date
     AND de.drug_exposure_start_date <= op.observation_period_end_date
-    GROUP BY 
-        de.drug_concept_id,
-        de.route_concept_id
+GROUP BY 
+    de.drug_concept_id,
+    de.route_concept_id
+WHERE route_concept_id IS NOT NULL AND route_concept_id != 0 -- analysis_id 700 gives total counts per drug_concept_id
