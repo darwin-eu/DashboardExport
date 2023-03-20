@@ -74,8 +74,8 @@ dashboardExport <- function(
     smallCellCount = 5,
     outputFolder = "output",
     sourceName = NULL,
-    verboseMode = TRUE)
-{
+    verboseMode = TRUE
+) {
     # Setup loggers
     ParallelLogger::clearLoggers()
     unlink(file.path(outputFolder, "log_dashboardExport.txt"))
@@ -108,13 +108,16 @@ dashboardExport <- function(
         return(NULL)
     }
 
-    # Check whether results for required Achilles analyses is available. 
+    # Check whether results for required Achilles analyses is available.
     # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
     expectedAnalysisIds <- c(0,1,2,3,101,102,103,105,108,110,111,113,117,400,401,403,405,420,700,701,703,705,720)
     analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, resultsDatabaseSchema)
     missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
     if (length(missingAnalysisIds) > 0) {
-        ParallelLogger::logError(sprintf("Missing Achilles analysis ids in result tables: %s.", paste(missingAnalysisIds, collapse=", ")))
+        ParallelLogger::logError(
+            sprintf("Missing Achilles analysis ids in result tables: %s.",
+            paste(missingAnalysisIds, collapse = ", "))
+        )
         ParallelLogger::logInfo("Please rerun Achilles including above analyses.")
         return(NULL)
     }
@@ -133,10 +136,24 @@ dashboardExport <- function(
     if (!file.exists(outputFolder)) {
         dir.create(outputFolder, recursive = TRUE)
     }
-    
+
     if (is.null(sourceName)) {
         sourceName <- .getSourceName(connectionDetails, cdmDatabaseSchema)
     }
+
+    # Retrieve custom analyses
+    custom_analysis_files <- list.files(
+        system.file('sql/sql_server/analyses', package = 'DashboardExport'),
+        pattern = '*.sql'
+    )
+    custom_analysis_sqls <- sapply(custom_analysis_files, function(x) {
+        SqlRender::loadRenderTranslateSql(
+            sqlFilename = file.path('analyses', x),
+            packageName = "DashboardExport",
+            dbms = connectionDetails$dbms,
+            cdm_database_schema = cdmDatabaseSchema
+        )
+    })
 
     analysisIds <- getAnalysisIdsToExport()
 
@@ -152,16 +169,20 @@ dashboardExport <- function(
                 cdm_database_schema = cdmDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
+                custom_analyses = paste(custom_analysis_sqls, collapse = '\nUNION ALL\n'),
                 package_version = packageVersion(pkg = "DashboardExport")
             )
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
             results <- DatabaseConnector::querySql(
                 connection = connection,
-                sql = sql   
+                sql = sql
             )
 
             # Save the data to the export folder
-            outputPath <- file.path(outputFolder, sprintf("dashboard_export_%s_%s.csv", sourceName, format(Sys.time(), "%Y%m%d")))
+            outputPath <- file.path(
+                outputFolder,
+                sprintf("dashboard_export_%s_%s.csv", sourceName, format(Sys.time(), "%Y%m%d"))
+            )
             readr::write_csv(results, outputPath)
             ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
         },
@@ -243,7 +264,7 @@ getRequiredAnalysisIds <- function() {
             DatabaseConnector::querySql(
                 connection = connection,
                 sql = sql
-            )       
+            )
         },
         error = function(e) {
             ParallelLogger::logError("Could not get available achilles analyses")
@@ -270,7 +291,7 @@ getRequiredAnalysisIds <- function() {
             DatabaseConnector::querySql(
                 connection = connection,
                 sql = sql
-            )       
+            )
         },
         error = function(e) {
             ParallelLogger::logError("Could not get Achilles metadata.")
