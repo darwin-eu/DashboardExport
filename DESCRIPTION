@@ -1,17 +1,19 @@
 Package: DashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
-Version: 0.3.0.900
+Version: 1.0.0
 Authors@R: 
-    person("Maxim", "Moinat", , "maxim.moinat@darwin-eu.org", role = c("aut", "cre"))
-Description: Exports Achilles results for the DARWIN Database Dashboard. Re-implements analyses xx30.
+  person("Maxim", "Moinat", , "m.moinat@darwin-eu.org", role = c("aut", "cre"))
+Description: Exports Achilles results for the DARWIN Database Dashboard.
 License: Apache 2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Depends: 
-   R (>= 3.5.0),
-   DatabaseConnector (>= 3.0.0),
-   ParallelLogger
+  R (>= 3.5.0),
+  DatabaseConnector (>= 3.0.0),
+  ParallelLogger
 Imports:
-    SqlRender,
-    readr
+  SqlRender,
+  readr
+Suggests:
+  OHDSI/Achilles
