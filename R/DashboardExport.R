@@ -170,7 +170,7 @@ dashboardExport <- function(
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
                 custom_analyses = paste(custom_analysis_sqls, collapse = '\nUNION ALL\n'),
-                package_version = packageVersion(pkg = "DashboardExport")
+                package_version = utils::packageVersion(pkg = "DashboardExport")
             )
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
             results <- DatabaseConnector::querySql(
@@ -234,7 +234,7 @@ dashboardExport <- function(
 #' @return vector of integer analysis ids
 #' @export
 getAnalysisIdsToExport <- function() {
-    read.csv(
+    utils::read.csv(
         system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
         stringsAsFactors = FALSE
     )$analysis_id
@@ -244,7 +244,7 @@ getAnalysisIdsToExport <- function() {
 #' @return vector of integer analysis ids
 #' @export
 getRequiredAnalysisIds <- function() {
-    df <- read.csv(
+    df <- utils::read.csv(
         file = system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
         stringsAsFactors = FALSE
     )
