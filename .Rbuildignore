@@ -1,0 +1,6 @@
+^extra$
+^output$
+^errorReport.+\.txt$
+^.+session\.sql$
+^\.vscode$
+^LICENSE\.md$

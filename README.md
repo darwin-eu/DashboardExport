@@ -36,22 +36,22 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
 resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
-sourceName <- Sys.getenv("SOURCE_NAME")
+databaseId <- Sys.getenv("DATABASE_ID")
 
 Achilles::achilles(
     connectionDetails = connectionDetails, 
-    cdmDatabaseSchema = cdmDatabaseSchema, 
-    resultsDatabaseSchema = resultsDatabaseSchema,
-    sourceName = sourceName,
-    outputFolder = "achilles_output"
+    cdmDatabaseSchema = cdmDatabaseSchema,
+    resultsDatabaseSchema = resultsDatabaseSchema, 
+    outputFolder = "achilles_output",
+    analysisIds = DashboardExport::getRequiredAnalysisIds()
 )
 
-DashboardExport:::dashboardExport(
+DashboardExport::dashboardExport(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
     outputFolder = "output",
-    sourceName = sourceName,
+    databaseId = databaseId,
     smallCellCount = 5
 )
 ```
@@ -61,3 +61,32 @@ This package runs one sql script that unions the records from the `achilles_resu
 In addition, it adds one new analysis 5000 which contains a subset of columns from the `cdm_source` table 
 (cdm_source_name, source_release_date, cdm_release_date, cdm_version, vocabulary_version).
 The result from this query is written to one csv file. This combines the columns from both achilles tables.
+
+### Output structure
+
+The output of `DashboardExport` has the following columns:
+
+Column | Data type | Description
+--- | --- | ---
+analysis_id* | int | The Achilles analysis id
+stratum_1 | varchar | Analysis stratified by given column
+stratum_2 | varchar | Analysis stratified by given column
+stratum_3 | varchar | Analysis stratified by given column
+stratum_4 | varchar | Analysis stratified by given column
+stratum_5 | varchar | Analysis stratified by given column
+count_value* | int | The main count output
+min_value | float | Minimum, for `dist`ributed analyses
+max_value | float | Maximum, for `dist`ributed analyses
+avg_value | float | Average, for `dist`ributed analyses
+stdev_value | float | Standard deviation, for `dist`ributed analyses
+median_value | float | Median, for `dist`ributed analyses
+p10_value | float | 10% percentile, for `dist`ributed analyses
+p25_value | float | 25% percentile, for `dist`ributed analyses
+p75_value | float | 75% percentile, for `dist`ributed analyses
+p90_value | float | 90% percentile, for `dist`ributed analyses
+
+*required fields
+
+The meaning of the `stratum` columns differs per analysis_id. Some analyses are not stratified. The stratums can be found in [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv). 
+
+The count is always given (if not below the provided smallCellCount), and is rounded up to the nearest hundred. The other numeric statistics are only given for analyses from the `achilles_results_dist` table.

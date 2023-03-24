@@ -11,6 +11,7 @@ dashboardExport(
   vocabDatabaseSchema = cdmDatabaseSchema,
   smallCellCount = 5,
   outputFolder = "output",
+  databaseId = NULL,
   verboseMode = TRUE
 )
 }
@@ -37,6 +38,8 @@ Default = 5.}
 
 \item{outputFolder}{Path to store logs and SQL files}
 
+\item{databaseId}{Name of the source, used in the filename exported}
+
 \item{verboseMode}{Boolean to determine if the console will show all execution steps. Default = TRUE}
 }
 \description{
@@ -62,7 +65,8 @@ results <- dashboardExport(
      connectionDetails = connectionDetails,
      cdmDatabaseSchema = "cdm",
      resultsDatabaseSchema = "results",
-     outputFolder = "output"
+     outputFolder = "output",
+     databaseId = "MyName"
 )
 }
 }
