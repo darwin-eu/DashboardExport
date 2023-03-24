@@ -6,7 +6,7 @@ SELECT
     CAST(NULL AS VARCHAR(255)) AS stratum_3,
     CAST(NULL AS VARCHAR(255)) AS stratum_4,
     CAST(NULL AS VARCHAR(255)) AS stratum_5,
-    COUNT_BIG(de.person_id) AS count_value
+    COUNT_BIG(*) AS count_value
 FROM 
     @cdm_database_schema.drug_exposure de
 JOIN @cdm_database_schema.observation_period op 
