@@ -36,7 +36,7 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
 resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
-sourceName <- Sys.getenv("SOURCE_NAME")
+databaseId <- Sys.getenv("DATABASE_ID")
 
 Achilles::achilles(
     connectionDetails = connectionDetails, 
@@ -51,7 +51,7 @@ DashboardExport::dashboardExport(
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
     outputFolder = "output",
-    sourceName = sourceName,
+    databaseId = databaseId,
     smallCellCount = 5
 )
 ```

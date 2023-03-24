@@ -51,7 +51,7 @@
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
 #' @param outputFolder             Path to store logs and SQL files
-#' @param sourceName               Name of the source, used in the filename exported
+#' @param databaseId               Name of the source, used in the filename exported
 #' @param verboseMode              Boolean to determine if the console will show all execution steps. Default = TRUE
 #' @examples
 #' \dontrun{
@@ -62,7 +62,7 @@
 #'      cdmDatabaseSchema = "cdm",
 #'      resultsDatabaseSchema = "results",
 #'      outputFolder = "output",
-#'      sourceName = "MyName"
+#'      databaseId = "MyName"
 #' )
 #' }
 #' @export
@@ -73,7 +73,7 @@ dashboardExport <- function(
     vocabDatabaseSchema = cdmDatabaseSchema,
     smallCellCount = 5,
     outputFolder = "output",
-    sourceName = NULL,
+    databaseId = NULL,
     verboseMode = TRUE
 ) {
     # Setup loggers
@@ -137,8 +137,8 @@ dashboardExport <- function(
         dir.create(outputFolder, recursive = TRUE)
     }
 
-    if (is.null(sourceName)) {
-        sourceName <- .getSourceName(connectionDetails, cdmDatabaseSchema)
+    if (is.null(databaseId)) {
+        databaseId <- .getSourceName(connectionDetails, cdmDatabaseSchema)
     }
 
     # Retrieve custom analyses
@@ -181,7 +181,7 @@ dashboardExport <- function(
             # Save the data to the export folder
             outputPath <- file.path(
                 outputFolder,
-                sprintf("dashboard_export_%s_%s.csv", sourceName, format(Sys.time(), "%Y%m%d"))
+                sprintf("dashboard_export_%s_%s.csv", databaseId, format(Sys.time(), "%Y%m%d"))
             )
             readr::write_csv(results, outputPath)
             ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
