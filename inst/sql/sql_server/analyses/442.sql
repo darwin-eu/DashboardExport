@@ -1,6 +1,5 @@
 -- 442 Number of records by condition_concept_id by age decile
 
---HINT DISTRIBUTE_ON_KEY(stratum_1)
 SELECT 
 	442 AS analysis_id,
     co.condition_concept_id AS stratum_1,
