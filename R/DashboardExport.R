@@ -167,6 +167,7 @@ dashboardExport <- function(
                 dbms = connectionDetails$dbms,
                 results_database_schema = resultsDatabaseSchema,
                 cdm_database_schema = cdmDatabaseSchema,
+                vocab_database_schema = vocabDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
                 custom_analyses = paste(custom_analysis_sqls, collapse = '\nUNION ALL\n'),
