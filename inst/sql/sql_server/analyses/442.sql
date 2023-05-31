@@ -8,10 +8,10 @@ SELECT
     CAST(NULL AS VARCHAR(255)) AS stratum_4,
     CAST(NULL AS VARCHAR(255)) AS stratum_5,
     COUNT_BIG(*) AS count_value
-FROM @cdmDatabaseSchema.person p
-JOIN @cdmDatabaseSchema.condition_occurrence co 
+FROM @cdm_database_schema.person p
+JOIN @cdm_database_schema.condition_occurrence co
     ON p.person_id = co.person_id
-JOIN @cdmDatabaseSchema.observation_period op 
+JOIN @cdm_database_schema.observation_period op
     ON co.person_id = op.person_id
     AND co.condition_start_date >= op.observation_period_start_date
     AND co.condition_start_date <= op.observation_period_end_date
