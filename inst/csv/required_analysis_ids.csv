@@ -66,6 +66,8 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 815,"Distribution of numeric values, by observation_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 820,Number of observation records  by observation start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 830,"Number of descendant observation occurrence records, by observation_concept_id",custom,observation_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+831,"Number of records by observation_concept_id by age decile",custom,observation_concept_id,age decile,,,,
+832,"Number of records by observation_concept_id by ICH age group",custom,observation_concept_id,ich age group,,,,
 901,"Number of drug era records, by drug_concept_id",analysis_results,drug_concept_id,,,,,domain_filter
 920,Number of drug era records by drug era start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 1001,"Number of condition era records, by condition_concept_id",analysis_results,condition_concept_id,,,,,domain_filter
@@ -87,5 +89,7 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 2105,"Number of device exposure records, by device_concept_id by device_type_concept_id",analysis_results,device_concept_id,device_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
 2120,Number of device_exposure records outside valid observation period,analysis_results,calendar month,,,,,"data_density,records_per_person"
 2130,"Number of descendant device exposure records, by device_concept_id",custom,device_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+2131,"Number of records by device_concept_id by age decile",custom,device_concept_id,age decile,,,,
+2132,"Number of records by device_concept_id by ICH age group",custom,device_concept_id,ich age group,,,,
 2201,"Number of note records, by note_type_concept_id",analysis_results,note_type_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records"
 5000,First record from the cdm_source table,custom,Source Release date,CDM Release date,CDM version,Vocabulary version,,meta_data_table
