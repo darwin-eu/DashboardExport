@@ -84,26 +84,3 @@ WHERE count_value > @min_cell_count
     AND analysis_id > 0 -- otherwise analysis_id 0 duplicated
     AND analysis_id < 2000000 -- exclude timings
 {@analysis_ids != ''} ? {AND analysis_id IN (@analysis_ids)}
-
-UNION ALL
-
--- CDM Source
-SELECT 
-    5000 as analysis_id,  
-    cdm_source_name as stratum_1, 
-    cast(source_release_date as varchar) as stratum_2, 
-    cast(cdm_release_date as varchar) as stratum_3, 
-    cdm_version as stratum_4,
-    vocabulary_version as stratum_5, 
-    -1 as count_value,
-    cast(null as float) min_value,
-    cast(null as float) max_value,
-    cast(null as float) avg_value,
-    cast(null as float) stdev_value,
-    cast(null as float) median_value,
-    cast(null as float) p10_value,
-    cast(null as float) p25_value,
-    cast(null as float) P75_value,
-    cast(null as float) p90_value
-FROM @cdm_database_schema.cdm_source
-;

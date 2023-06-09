@@ -1,4 +1,5 @@
 -- 830	Number of descendant observation occurrence records, by observation_concept_id
+INSERT INTO @results_database_schema.@results_table (
 SELECT
     830 as analysis_id,
     CAST(co.observation_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -17,3 +18,4 @@ JOIN (
 ) c
     ON c.concept_id = co.observation_concept_id
 GROUP BY co.observation_concept_id, c.DRC
+)

@@ -1,4 +1,5 @@
 -- 2130	Number of descendant device exposure records, by device_concept_id
+INSERT INTO @results_database_schema.@results_table (
 SELECT
     2130 as analysis_id,
     CAST(co.device_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -17,3 +18,4 @@ JOIN (
 ) c
     ON c.concept_id = co.device_concept_id
 GROUP BY co.device_concept_id, c.DRC
+)

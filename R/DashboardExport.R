@@ -110,7 +110,7 @@ dashboardExport <- function(
 
     # Check whether results for required Achilles analyses is available.
     # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
-    expectedAnalysisIds <- c(0,1,2,3,101,102,103,105,108,110,111,113,117,400,401,403,405,420,700,701,703,705,720)
+    expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 112, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
     analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, resultsDatabaseSchema)
     missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
     if (length(missingAnalysisIds) > 0) {
@@ -141,19 +141,12 @@ dashboardExport <- function(
         databaseId <- .getSourceName(connectionDetails, cdmDatabaseSchema)
     }
 
-    # Retrieve custom analyses
-    custom_analysis_files <- list.files(
-        system.file('sql/sql_server/analyses', package = 'DashboardExport'),
-        pattern = '*.sql'
+    .executeDasbhoardExportAnalyses(
+        connectionDetails = connectionDetails,
+        cdmDatabaseSchema = cdmDatabaseSchema,
+        vocabDatabaseSchema = vocabDatabaseSchema,
+        resultsDatabaseSchema = resultsDatabaseSchema
     )
-    custom_analysis_sqls <- sapply(custom_analysis_files, function(x) {
-        SqlRender::loadRenderTranslateSql(
-            sqlFilename = file.path('analyses', x),
-            packageName = "DashboardExport",
-            dbms = connectionDetails$dbms,
-            cdm_database_schema = cdmDatabaseSchema
-        )
-    })
 
     analysisIds <- getAnalysisIdsToExport()
 
@@ -170,7 +163,6 @@ dashboardExport <- function(
                 vocab_database_schema = vocabDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
-                custom_analyses = paste(custom_analysis_sqls, collapse = '\nUNION ALL\n'),
                 package_version = utils::packageVersion(pkg = "DashboardExport")
             )
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
@@ -235,21 +227,22 @@ dashboardExport <- function(
 #' @return vector of integer analysis ids
 #' @export
 getAnalysisIdsToExport <- function() {
-    utils::read.csv(
-        system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
-        stringsAsFactors = FALSE
-    )$analysis_id
+    .readRequiredAnalyses()$analysis_id
 }
 
 #' @title Get minimally required Achilles analysis ids, used in the DARWIN Database Dashboard
 #' @return vector of integer analysis ids
 #' @export
 getRequiredAnalysisIds <- function() {
-    df <- utils::read.csv(
+    df <- .readRequiredAnalyses()
+    df[df$used_in_dashboard_materialized_view != "", 'analysis_id']
+}
+
+.readRequiredAnalyses <- function() {
+    utils::read.csv(
         file = system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
         stringsAsFactors = FALSE
     )
-    df[df$used_in_dashboard_materialized_view != "", 'analysis_id']
 }
 
 .getAvailableAchillesAnalysisIds <- function(connectionDetails, resultsDatabaseSchema) {
@@ -322,4 +315,77 @@ getRequiredAnalysisIds <- function() {
     rm(connection)
   })
   sourceName
+}
+
+.executeDasbhoardExportAnalyses <- function(connectionDetails, cdmDatabaseSchema, vocabDatabaseSchema, resultsDatabaseSchema) {
+    analysisDetails <- .readRequiredAnalyses()
+    analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
+    resultsTable <- 'dashboard_export_results'
+
+    customAnalysisSqls <- lapply(analysesIdsToExecute, function(analysisId) {
+        list(
+            analysisId = analysisId,
+            sql = SqlRender::loadRenderTranslateSql(
+                sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
+                packageName = "DashboardExport",
+                dbms = connectionDetails$dbms,
+                cdm_database_schema = cdmDatabaseSchema,
+                vocab_database_schema = vocabDatabaseSchema,
+                results_database_schema = resultsDatabaseSchema,
+                results_table = resultsTable,
+                warnOnMissingParameters = FALSE
+            )
+        )
+    })
+
+    connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+    on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
+
+    ddl_sql <- SqlRender::loadRenderTranslateSql(
+        sqlFilename = 'dashboardExportResults_DDL.sql',
+        packageName = "DashboardExport",
+        dbms = connectionDetails$dbms,
+        results_database_schema = resultsDatabaseSchema,
+        results_table = resultsTable
+    )
+
+    DatabaseConnector::executeSql(
+        connection = connection,
+        sql = ddl_sql,
+        errorReportFile = file.path(
+            outputFolder,
+            paste0("dashboardExportError_ddl.txt")
+        ),
+        progressBar = FALSE,
+        reportOverallTime = FALSE
+    )
+    ParallelLogger::logInfo('DashboardExport results table created')
+
+    for (mainSql in customAnalysisSqls) {
+        start <- Sys.time()
+        ParallelLogger::logInfo(sprintf(
+            "Analysis %d -- START",
+            mainSql$analysisId,
+            analysisDetails$ANALYSIS_NAME[analysisDetails$ANALYSIS_ID == mainSql$analysisId]
+        ))
+        tryCatch({
+                DatabaseConnector::executeSql(
+                    connection = connection,
+                    sql = mainSql$sql,
+                    errorReportFile = file.path(
+                        outputFolder,
+                        paste0("dashboardExportError_", mainSql$analysisId, ".txt")
+                    )
+                )
+                delta <- Sys.time() - start
+                ParallelLogger::logInfo(sprintf(
+                    "[Main Analysis] [COMPLETE] %d (%f %s)",
+                    as.integer(mainSql$analysisId),
+                    delta, attr(delta, "units")
+                ))
+            }, error = function(e) {
+                ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", mainSql$analysisId, e))
+            }
+        )
+    }
 }
