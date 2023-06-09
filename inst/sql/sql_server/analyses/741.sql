@@ -1,4 +1,5 @@
 -- 741 Number of drug exposure records, by drug_concept_id by route_concept_id
+INSERT INTO @results_database_schema.@results_table (
 SELECT 
     741 AS analysis_id,
     CAST(de.drug_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -18,3 +19,4 @@ WHERE route_concept_id IS NOT NULL AND route_concept_id != 0 -- no need to run i
 GROUP BY 
     de.drug_concept_id,
     de.route_concept_id
+)
