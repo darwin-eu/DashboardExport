@@ -159,8 +159,6 @@ dashboardExport <- function(
                 packageName = "DashboardExport",
                 dbms = connectionDetails$dbms,
                 results_database_schema = resultsDatabaseSchema,
-                cdm_database_schema = cdmDatabaseSchema,
-                vocab_database_schema = vocabDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
                 de_results_table = 'dashboard_export_results',
@@ -237,11 +235,6 @@ getAnalysisIdsToExport <- function() {
 getRequiredAnalysisIds <- function() {
     df <- .readRequiredAnalyses()
     df[df$used_in_dashboard_materialized_view != "", 'analysis_id']
-}
-
-getCustomAnalysisIds <- function() {
-    df <- .readRequiredAnalyses()
-    df[df$source == 'custom', 'analysis_id']
 }
 
 .readRequiredAnalyses <- function() {
@@ -350,13 +343,13 @@ getCustomAnalysisIds <- function() {
     ParallelLogger::logInfo('DashboardExport results table created')
 
     # Execute DashboardExport Analyses
-    analysesIdsToExecute <- getCustomAnalysisIds()
+    analysisDetails <- .readRequiredAnalyses()
+    analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
     for (analysisId in analysesIdsToExecute) {
-        start <- Sys.time()
         ParallelLogger::logInfo(sprintf(
-            "Analysis %d -- START",
+            "Analysis %d (%s) -- START",
             analysisId,
-            analysisDetails$ANALYSIS_NAME[analysisDetails$ANALYSIS_ID == analysisId]
+            analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
         ))
 
         sql <- SqlRender::loadRenderTranslateSql(
@@ -379,12 +372,6 @@ getCustomAnalysisIds <- function() {
                         paste0("dashboardExportError_", analysisId, ".txt")
                     )
                 )
-                delta <- Sys.time() - start
-                ParallelLogger::logInfo(sprintf(
-                    "[Main Analysis] [COMPLETE] %d (%f %s)",
-                    as.integer(analysisId),
-                    delta, attr(delta, "units")
-                ))
             }, error = function(e) {
                 ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", analysisId, e))
             }

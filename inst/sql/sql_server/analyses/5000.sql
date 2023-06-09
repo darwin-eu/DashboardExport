@@ -7,7 +7,7 @@ SELECT
     cast(cdm_release_date as varchar) as stratum_3, 
     cdm_version as stratum_4,
     vocabulary_version as stratum_5, 
-    -1 as count_value
+    999 as count_value -- needs to be > min_cell_count to pass export
 FROM @cdm_database_schema.cdm_source
 )
 ;
