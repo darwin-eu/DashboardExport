@@ -69,11 +69,17 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 1803,Number of distinct measurement occurrence concepts per person,analysis_results,,,,,,number_of_distinct_per_person
 1805,"Number of measurement occurrence records, by measurement_concept_id by measurement_type_concept_id",analysis_results,measurement_concept_id,measurement_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
 1806,Distribution of age by measurement_concept_id,analysis_results_dist,measurement_concept_id,gender_concept_id,,,,
+1814,"Number of measurement records with no value (numeric, string, or concept)",analysis_results,,,,,,
 1815,"Distribution of numeric values, by measurement_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 1816,"Distribution of low range, by measurement_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 1817,"Distribution of high range, by measurement_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 1820,Number of measurement records  by measurement start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-1830,"Number of descendant measurement occurrence records, by measurement_concept_id",custom, concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+1830,"Number of descendant measurement occurrence records, by measurement_concept_id",custom, concept_id,,,,,"conce
+2000,"Number of patients with at least 1 Dx and 1 Rx",analysis_results,,,,,,
+2001,"Number of patients with at least 1 Dx and 1 Proc",analysis_results,,,,,,
+2002,"Number of patients with at least 1 Meas, 1 Dx and 1 Rx",analysis_results,,,,,,
+2003,"Number of patients with at least 1 Visit",analysis_results,,,,,,
+2004,"Number of distinct patients that overlap between specific domains",analysis_results,domain_bit_string,proportion_of_overlap,,,,
 2100,"Number of persons with at least one device exposure, by device_concept_id",analysis_results,device_concept_id,,,,,
 2101,"Number of device exposure records, by device_concept_id",analysis_results,device_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,concept_browser_table3,concept_coverage2,concept_browser_table2"
 2105,"Number of device exposure records, by device_concept_id by device_type_concept_id",analysis_results,device_concept_id,device_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
