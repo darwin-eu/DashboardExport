@@ -1,5 +1,6 @@
 -- 1834 Number of records by measurement_concept_id by age decile
 
+INSERT INTO @results_database_schema.@results_table (
 SELECT
     1834 AS analysis_id,
     m.measurement_concept_id AS stratum_1,
@@ -19,3 +20,4 @@ WHERE measurement_concept_id > 0
 GROUP BY
     m.measurement_concept_id,
     FLOOR((YEAR(m.measurement_date) - p.year_of_birth) / 10)
+)

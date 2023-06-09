@@ -42,6 +42,7 @@ WITH cte1 AS (
         end as age_group
     from cte2
 )
+INSERT INTO @results_database_schema.@results_table (
 select
     1835 as analysis_id,
     measurement_concept_id as stratum_1,
@@ -52,3 +53,4 @@ select
     COUNT_BIG(*) AS count_value
 from cte3
 group by measurement_concept_id, age_group
+)

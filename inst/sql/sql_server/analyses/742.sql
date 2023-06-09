@@ -1,5 +1,6 @@
 -- 742 Number of records by drug_concept_id by age decile
 
+INSERT INTO @results_database_schema.@results_table (
 SELECT
     742 AS analysis_id,
     de.drug_concept_id AS stratum_1,
@@ -19,3 +20,4 @@ WHERE drug_concept_id > 0
 GROUP BY
     de.drug_concept_id,
     FLOOR((YEAR(de.drug_exposure_start_date) - p.year_of_birth) / 10)
+)
