@@ -35,28 +35,31 @@ FROM (
 
     UNION ALL
 
+    -- Regular achilles_results
     SELECT 
-    CASE 
-        -- Re-id analysis_id xx30 to prevent clashes
-        WHEN analysis_id in (430,630,730,830,1830,2130) THEN analysis_id + 10
-        ELSE analysis_id 
-    END as analysis_id,
-    stratum_1,
-    stratum_2,
-    stratum_3,
-    stratum_4,
-    stratum_5,
-    count_value
+        CASE 
+            -- Re-id analysis_id xx30 to prevent clashes
+            WHEN analysis_id in (430,630,730,830,1830,2130) THEN analysis_id + 10
+            ELSE analysis_id 
+        END as analysis_id,
+        stratum_1,
+        stratum_2,
+        stratum_3,
+        stratum_4,
+        stratum_5,
+        count_value
     FROM @results_database_schema.achilles_results
-    WHERE analysis_id != 0
+    WHERE analysis_id > 0 
+    AND analysis_id < 2000000 -- exclude timings
 
     UNION ALL
 
-    @custom_analyses
+    -- DashboardExport-specific analyses
+    SELECT *
+    FROM @results_database_schema.@de_results_table
 
 ) ar
 WHERE count_value > @min_cell_count 
-    AND analysis_id < 2000000 -- exclude timings
     {@analysis_ids != ''} ? {AND analysis_id IN (@analysis_ids)}
 
 UNION ALL
@@ -83,27 +86,4 @@ FROM @results_database_schema.achilles_results_dist
 WHERE count_value > @min_cell_count 
     AND analysis_id > 0 -- otherwise analysis_id 0 duplicated
     AND analysis_id < 2000000 -- exclude timings
-{@analysis_ids != ''} ? {AND analysis_id IN (@analysis_ids)}
-
-UNION ALL
-
--- CDM Source
-SELECT 
-    5000 as analysis_id,  
-    cdm_source_name as stratum_1, 
-    cast(source_release_date as varchar) as stratum_2, 
-    cast(cdm_release_date as varchar) as stratum_3, 
-    cdm_version as stratum_4,
-    vocabulary_version as stratum_5, 
-    -1 as count_value,
-    cast(null as float) min_value,
-    cast(null as float) max_value,
-    cast(null as float) avg_value,
-    cast(null as float) stdev_value,
-    cast(null as float) median_value,
-    cast(null as float) p10_value,
-    cast(null as float) p25_value,
-    cast(null as float) P75_value,
-    cast(null as float) p90_value
-FROM @cdm_database_schema.cdm_source
-;
+    {@analysis_ids != ''} ? {AND analysis_id IN (@analysis_ids)}
