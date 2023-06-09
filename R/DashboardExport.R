@@ -163,6 +163,7 @@ dashboardExport <- function(
                 vocab_database_schema = vocabDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
+                de_results_table = 'dashboard_export_results',
                 package_version = utils::packageVersion(pkg = "DashboardExport")
             )
             ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
@@ -236,6 +237,11 @@ getAnalysisIdsToExport <- function() {
 getRequiredAnalysisIds <- function() {
     df <- .readRequiredAnalyses()
     df[df$used_in_dashboard_materialized_view != "", 'analysis_id']
+}
+
+getCustomAnalysisIds <- function() {
+    df <- .readRequiredAnalyses()
+    df[df$source == 'custom', 'analysis_id']
 }
 
 .readRequiredAnalyses <- function() {
@@ -318,29 +324,11 @@ getRequiredAnalysisIds <- function() {
 }
 
 .executeDasbhoardExportAnalyses <- function(connectionDetails, cdmDatabaseSchema, vocabDatabaseSchema, resultsDatabaseSchema) {
-    analysisDetails <- .readRequiredAnalyses()
-    analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
-    resultsTable <- 'dashboard_export_results'
-
-    customAnalysisSqls <- lapply(analysesIdsToExecute, function(analysisId) {
-        list(
-            analysisId = analysisId,
-            sql = SqlRender::loadRenderTranslateSql(
-                sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
-                packageName = "DashboardExport",
-                dbms = connectionDetails$dbms,
-                cdm_database_schema = cdmDatabaseSchema,
-                vocab_database_schema = vocabDatabaseSchema,
-                results_database_schema = resultsDatabaseSchema,
-                results_table = resultsTable,
-                warnOnMissingParameters = FALSE
-            )
-        )
-    })
-
     connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
     on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
 
+    # Create DashboardExport results table. Drop if exists.
+    resultsTable <- 'dashboard_export_results'
     ddl_sql <- SqlRender::loadRenderTranslateSql(
         sqlFilename = 'dashboardExportResults_DDL.sql',
         packageName = "DashboardExport",
@@ -361,30 +349,44 @@ getRequiredAnalysisIds <- function() {
     )
     ParallelLogger::logInfo('DashboardExport results table created')
 
-    for (mainSql in customAnalysisSqls) {
+    # Execute DashboardExport Analyses
+    analysesIdsToExecute <- getCustomAnalysisIds()
+    for (analysisId in analysesIdsToExecute) {
         start <- Sys.time()
         ParallelLogger::logInfo(sprintf(
             "Analysis %d -- START",
-            mainSql$analysisId,
-            analysisDetails$ANALYSIS_NAME[analysisDetails$ANALYSIS_ID == mainSql$analysisId]
+            analysisId,
+            analysisDetails$ANALYSIS_NAME[analysisDetails$ANALYSIS_ID == analysisId]
         ))
+
+        sql <- SqlRender::loadRenderTranslateSql(
+            sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
+            packageName = "DashboardExport",
+            dbms = connectionDetails$dbms,
+            cdm_database_schema = cdmDatabaseSchema,
+            vocab_database_schema = vocabDatabaseSchema,
+            results_database_schema = resultsDatabaseSchema,
+            results_table = resultsTable,
+            warnOnMissingParameters = FALSE
+        )
+
         tryCatch({
                 DatabaseConnector::executeSql(
                     connection = connection,
-                    sql = mainSql$sql,
+                    sql = sql,
                     errorReportFile = file.path(
                         outputFolder,
-                        paste0("dashboardExportError_", mainSql$analysisId, ".txt")
+                        paste0("dashboardExportError_", analysisId, ".txt")
                     )
                 )
                 delta <- Sys.time() - start
                 ParallelLogger::logInfo(sprintf(
                     "[Main Analysis] [COMPLETE] %d (%f %s)",
-                    as.integer(mainSql$analysisId),
+                    as.integer(analysisId),
                     delta, attr(delta, "units")
                 ))
             }, error = function(e) {
-                ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", mainSql$analysisId, e))
+                ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", analysisId, e))
             }
         )
     }
