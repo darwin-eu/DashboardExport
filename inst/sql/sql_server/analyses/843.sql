@@ -1,4 +1,4 @@
--- 832 Number of records by observation_concept_id by ICH age group
+-- 843 Number of records by observation_concept_id by ICH age group
 -- If day and/or month of birth are not given, then these are set to 1.
 
 WITH cte1 AS (
@@ -14,13 +14,13 @@ WITH cte1 AS (
     SELECT 
         p.person_id,
         o.observation_concept_id,
-        DATEDIFF(day, p.date_of_birth, o.obseravtion_date) AS age_days,
+        DATEDIFF(day, p.date_of_birth, o.observation_date) AS age_days,
         DATEDIFF(year, p.date_of_birth, o.observation_date) AS age_years
     FROM cte1 p
     JOIN @cdm_database_schema.observation o
-        ON p.person_id = co.person_id
+        ON p.person_id = o.person_id
     JOIN @cdm_database_schema.observation_period op
-        ON co.person_id = op.person_id
+        ON o.person_id = op.person_id
         AND o.observation_date >= op.observation_period_start_date
         AND o.observation_date <= op.observation_period_end_date
     WHERE DATEDIFF(year, p.date_of_birth, o.observation_date) < 19
@@ -44,7 +44,7 @@ WITH cte1 AS (
 )
 INSERT INTO @results_database_schema.@results_table (
 select 
-    832 as analysis_id,
+    843 as analysis_id,
     observation_concept_id as stratum_1,
     age_group as stratum_2,
     CAST(NULL AS VARCHAR(255)) AS stratum_3,

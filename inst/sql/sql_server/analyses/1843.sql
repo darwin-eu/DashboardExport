@@ -1,4 +1,4 @@
--- 1835 Number of records by measurement_concept_id by ICH age group
+-- 1843 Number of records by measurement_concept_id by ICH age group
 -- If day and/or month of birth are not given, then these are set to 1.
 
 WITH cte1 AS (
@@ -44,7 +44,7 @@ WITH cte1 AS (
 )
 INSERT INTO @results_database_schema.@results_table (
 select
-    1835 as analysis_id,
+    1843 as analysis_id,
     measurement_concept_id as stratum_1,
     age_group as stratum_2,
     CAST(NULL AS VARCHAR(255)) AS stratum_3,

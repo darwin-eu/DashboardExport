@@ -1,31 +1,31 @@
--- 2132 Number of records by device_concept_id by ICH age group
+-- 643 Number of records by procedure_concept_id by ICH age group
 -- If day and/or month of birth are not given, then these are set to 1.
 
 WITH cte1 AS (
-    SELECT 
+    SELECT
         person_id,
         datefromparts(
-            year_of_birth, 
-            coalesce(month_of_birth, 1), 
+            year_of_birth,
+            coalesce(month_of_birth, 1),
             coalesce(day_of_birth, 1)
         ) as date_of_birth
     FROM @cdm_database_schema.person
-), cte2 as (
-    SELECT 
+), cte2 AS (
+    SELECT
         p.person_id,
-        de.device_concept_id,
-        DATEDIFF(day, p.date_of_birth, de.device_exposure_start_date) AS age_days,
-        DATEDIFF(year, p.date_of_birth, de.device_exposure_start_date) AS age_years
+        po.procedure_concept_id,
+        DATEDIFF(day, p.date_of_birth, po.procedure_date) AS age_days,
+        DATEDIFF(year, p.date_of_birth, po.procedure_date) AS age_years
     FROM cte1 p
-    JOIN @cdm_database_schema.device_exposure de
-        ON p.person_id = co.person_id
+    JOIN @cdm_database_schema.procedure_occurrence po
+        ON p.person_id = po.person_id
     JOIN @cdm_database_schema.observation_period op
-        ON co.person_id = op.person_id
-        AND de.device_exposure_start_date >= op.observation_period_start_date
-        AND de.device_exposure_start_date <= op.observation_period_end_date
-    WHERE DATEDIFF(year, p.date_of_birth, de.device_exposure_start_date) < 19
-        AND device_concept_id > 0 -- not in original 404 analysis
-), cte3 as (
+        ON po.person_id = op.person_id
+        AND po.procedure_date >= op.observation_period_start_date
+        AND po.procedure_date <= op.observation_period_end_date
+    WHERE DATEDIFF(year, p.date_of_birth, po.procedure_date) < 19
+        AND procedure_concept_id  > 0
+), cte3 AS (
     SELECT *,
         case
             when age_days < 0
@@ -43,14 +43,14 @@ WITH cte1 AS (
     from cte2
 )
 INSERT INTO @results_database_schema.@results_table (
-select 
-    2132 as analysis_id,
-    device_concept_id as stratum_1,
+select
+    643 as analysis_id,
+    procedure_concept_id as stratum_1,
     age_group as stratum_2,
     CAST(NULL AS VARCHAR(255)) AS stratum_3,
     CAST(NULL AS VARCHAR(255)) AS stratum_4,
     CAST(NULL AS VARCHAR(255)) AS stratum_5,
-    count_big(*) as count_value
+    COUNT_BIG(*) AS count_value
 from cte3
-group by device_concept_id, age_group
+group by procedure_concept_id, age_group
 )
