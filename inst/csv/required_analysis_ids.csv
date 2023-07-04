@@ -75,6 +75,7 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 1817,"Distribution of high range, by measurement_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 1820,Number of measurement records  by measurement start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 1830,"Number of descendant measurement occurrence records, by measurement_concept_id",custom, concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+1900,"Source values mapped to concept_id 0 by table, by column, by source_value",analysis_results,table_name,column_name,source_value,,,"DQ count of all unmapped source values"
 2000,"Number of patients with at least 1 Dx and 1 Rx",analysis_results,,,,,,
 2001,"Number of patients with at least 1 Dx and 1 Proc",analysis_results,,,,,,
 2002,"Number of patients with at least 1 Meas, 1 Dx and 1 Rx",analysis_results,,,,,,
