@@ -29,7 +29,9 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 405,"Number of condition occurrence records, by condition_concept_id by condition_type_concept_id",analysis_results,condition_concept_id,condition_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
 406,Distribution of age by condition_concept_id,analysis_results_dist,condition_concept_id,gender_concept_id,,,,
 420,Number of condition occurrence records by condition occurrence start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-430,"Number of descendant condition occurrence records,by condition_concept_id",custom, concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+430,"Number of descendant condition occurrence records, by condition_concept_id",custom,condition_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+442,"Number of records by condition_concept_id by age decile",custom,condition_concept_id,age decile,,,,
+443,"Number of records by condition_concept_id by ICH age group",custom,condition_concept_id,ich age group,,,,
 501,"Number of records of death, by cause_concept_id",analysis_results,cause_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records"
 502,Number of persons by death month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 506,Distribution of age at death by gender,analysis_results_dist,gender_concept_id,,,,,
@@ -39,7 +41,9 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 605,"Number of procedure occurrence records, by procedure_concept_id by procedure_type_concept_id",analysis_results,procedure_concept_id,procedure_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
 606,Distribution of age by procedure_concept_id,analysis_results_dist,procedure_concept_id,gender_concept_id,,,,
 620,Number of procedure occurrence records  by procedure occurrence start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-630,"Number of descendant procedure occurrence records,by procedure_concept_id",custom,concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+630,"Number of descendant procedure occurrence records,by procedure_concept_id",custom,procedure_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+642,"Number of records by procedure_id by age decile",custom,procedure_concept_id,age decile,,,,
+643,"Number of records by procedure_concept_id by ICH age group",custom,procedure_concept_id,ich age group,,,,
 700,"Number of persons with at least one drug exposure, by drug_concept_id",analysis_results,drug_concept_id,,,,,domain_filter
 701,"Number of drug exposure records, by drug_concept_id",analysis_results,drug_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,domain_filter,concept_browser_table3,concept_coverage2,concept_browser_table2"
 703,Number of distinct drug exposure concepts per person,analysis_results_dist,,,,,,"number_of_distinct_per_person,number_of_distinct_per_person"
@@ -49,9 +53,11 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 716,Distribution of refills by drug_concept_id,analysis_results_dist,drug_concept_id,,,,,
 717,Distribution of quantity by drug_concept_id,analysis_results_dist,drug_concept_id,,,,,
 720,Number of drug exposure records  by drug exposure start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-730,"Number of descendant drug exposure records, by drug_concept_id",custom,concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+730,"Number of descendant drug exposure records, by drug_concept_id",custom,drug_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
 740,"Number of drug occurrence records, by route_concept_id",custom,route_concept_id,,,,,
-741,"Number of drug exposure records, by drug_concept_id by route_concept_id",custom,concept_id,route_concept_id,,,,
+741,"Number of drug exposure records, by drug_concept_id by route_concept_id",custom,drug_concept_id,route_concept_id,,,,
+742,"Number of records by drug_concept_id by age decile",custom,drug_concept_id,age decile,,,,
+743,"Number of records by drug_concept_id by ICH age group",custom,drug_concept_id,ich age group,,,,
 800,"Number of persons with at least one observation occurrence, by observation_concept_id",analysis_results,observation_concept_id,,,,,domain_filter
 801,"Number of observation occurrence records, by observation_concept_id",analysis_results,observation_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,domain_filter,concept_browser_table3,concept_coverage2,concept_browser_table2"
 803,Number of distinct observation occurrence concepts per person,analysis_results_dist,,,,,,"number_of_distinct_per_person,number_of_distinct_per_person"
@@ -59,7 +65,9 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 806,Distribution of age by observation_concept_id,analysis_results_dist,observation_concept_id,gender_concept_id,,,,
 815,"Distribution of numeric values, by observation_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 820,Number of observation records  by observation start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-830,"Number of descendant observation occurrence records, by observation_concept_id",custom,concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+830,"Number of descendant observation occurrence records, by observation_concept_id",custom,observation_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+842,"Number of records by observation_concept_id by age decile",custom,observation_concept_id,age decile,,,,
+843,"Number of records by observation_concept_id by ICH age group",custom,observation_concept_id,ich age group,,,,
 901,"Number of drug era records, by drug_concept_id",analysis_results,drug_concept_id,,,,,domain_filter
 920,Number of drug era records by drug era start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 1001,"Number of condition era records, by condition_concept_id",analysis_results,condition_concept_id,,,,,domain_filter
@@ -74,7 +82,9 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 1816,"Distribution of low range, by measurement_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 1817,"Distribution of high range, by measurement_concept_id and unit_concept_id",analysis_results_dist,,,,,,
 1820,Number of measurement records  by measurement start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-1830,"Number of descendant measurement occurrence records, by measurement_concept_id",custom, concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+1830,"Number of descendant measurement occurrence records, by measurement_concept_id",custom,measurement_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+1842,"Number of records by measurement_concept_id by age decile",custom,measurement_concept_id,age decile,,,,
+1843,"Number of records by measurement_concept_id by ICH age group",custom,measurement_concept_id,ich age group,,,,
 2000,"Number of patients with at least 1 Dx and 1 Rx",analysis_results,,,,,,
 2001,"Number of patients with at least 1 Dx and 1 Proc",analysis_results,,,,,,
 2002,"Number of patients with at least 1 Meas, 1 Dx and 1 Rx",analysis_results,,,,,,
@@ -84,6 +94,8 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 2101,"Number of device exposure records, by device_concept_id",analysis_results,device_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,concept_browser_table3,concept_coverage2,concept_browser_table2"
 2105,"Number of device exposure records, by device_concept_id by device_type_concept_id",analysis_results,device_concept_id,device_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
 2120,Number of device_exposure records outside valid observation period,analysis_results,calendar month,,,,,"data_density,records_per_person"
-2130,"Number of descendant device exposure records, by device_concept_id",custom, concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+2130,"Number of descendant device exposure records, by device_concept_id",custom,device_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+2142,"Number of records by device_concept_id by age decile",custom,device_concept_id,age decile,,,,
+2143,"Number of records by device_concept_id by ICH age group",custom,device_concept_id,ich age group,,,,
 2201,"Number of note records, by note_type_concept_id",analysis_results,note_type_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records"
 5000,First record from the cdm_source table,custom,Source Release date,CDM Release date,CDM version,Vocabulary version,,meta_data_table
