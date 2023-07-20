@@ -15,7 +15,7 @@ JOIN @cdm_database_schema.observation_period op
     ON vo.person_id = op.person_id
     AND vo.visit_start_date >= op.observation_period_start_date
     AND vo.visit_start_date <= op.observation_period_end_date
-WHERE visit_concept_id > 0 -- not in original 404 analysis
+WHERE visit_concept_id != 0
 GROUP BY
     vo.visit_concept_id,
     FLOOR((YEAR(vo.visit_start_date) - p.year_of_birth) / 10)

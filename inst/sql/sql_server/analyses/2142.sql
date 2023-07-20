@@ -15,7 +15,7 @@ JOIN @cdm_database_schema.observation_period op
     ON de.person_id = op.person_id
     AND de.device_exposure_start_date >= op.observation_period_start_date
     AND de.device_exposure_start_date <= op.observation_period_end_date
-WHERE device_concept_id > 0
+WHERE device_concept_id != 0
 GROUP BY 
     de.device_concept_id,
     FLOOR((YEAR(de.device_exposure_start_date) - p.year_of_birth) / 10)

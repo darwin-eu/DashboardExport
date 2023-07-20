@@ -16,7 +16,7 @@ ON p.person_id = o.person_id
     ON o.person_id = op.person_id
     AND o.observation_date >= op.observation_period_start_date
     AND o.observation_date <= op.observation_period_end_date
-WHERE observation_concept_id > 0 -- not in original 404 analysis
+WHERE observation_concept_id != 0
 GROUP BY
     o.observation_concept_id,
     FLOOR((YEAR(o.observation_date) - p.year_of_birth) / 10)

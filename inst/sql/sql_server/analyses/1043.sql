@@ -43,14 +43,14 @@ WITH cte1 AS (
     from cte2
 )
 INSERT INTO @results_database_schema.@results_table (
-select
-    1043 as analysis_id,
-    condition_concept_id as stratum_1,
-    age_group as stratum_2,
-    CAST(NULL AS VARCHAR(255)) AS stratum_3,
-    CAST(NULL AS VARCHAR(255)) AS stratum_4,
-    CAST(NULL AS VARCHAR(255)) AS stratum_5,
-    count_big(*) as count_value
-from cte3
-group by condition_concept_id, age_group
+    select
+        1043 as analysis_id,
+        condition_concept_id as stratum_1,
+        age_group as stratum_2,
+        CAST(NULL AS VARCHAR(255)) AS stratum_3,
+        CAST(NULL AS VARCHAR(255)) AS stratum_4,
+        CAST(NULL AS VARCHAR(255)) AS stratum_5,
+        count_big(*) as count_value
+    from cte3
+    group by condition_concept_id, age_group
 )

@@ -24,7 +24,7 @@ WITH cte1 AS (
         AND de.drug_exposure_start_date >= op.observation_period_start_date
         AND de.drug_exposure_start_date <= op.observation_period_end_date
     WHERE DATEDIFF(year, p.date_of_birth, de.drug_exposure_start_date) < 19
-        AND drug_concept_id  > 0
+        AND drug_concept_id != 0
 ), cte3 AS (
     SELECT *,
         case
@@ -43,14 +43,14 @@ WITH cte1 AS (
     from cte2
 )
 INSERT INTO @results_database_schema.@results_table (
-select
-    743 as analysis_id,
-    drug_concept_id as stratum_1,
-    age_group as stratum_2,
-    CAST(NULL AS VARCHAR(255)) AS stratum_3,
-    CAST(NULL AS VARCHAR(255)) AS stratum_4,
-    CAST(NULL AS VARCHAR(255)) AS stratum_5,
-    COUNT_BIG(*) AS count_value
-from cte3
-group by drug_concept_id, age_group
+    select
+        743 as analysis_id,
+        drug_concept_id as stratum_1,
+        age_group as stratum_2,
+        CAST(NULL AS VARCHAR(255)) AS stratum_3,
+        CAST(NULL AS VARCHAR(255)) AS stratum_4,
+        CAST(NULL AS VARCHAR(255)) AS stratum_5,
+        COUNT_BIG(*) AS count_value
+    from cte3
+    group by drug_concept_id, age_group
 )

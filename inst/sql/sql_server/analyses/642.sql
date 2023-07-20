@@ -16,7 +16,7 @@ JOIN @cdm_database_schema.observation_period op
     ON po.person_id = op.person_id
     AND po.procedure_date >= op.observation_period_start_date
     AND po.procedure_date <= op.observation_period_end_date
-WHERE procedure_concept_id > 0
+WHERE procedure_concept_id != 0
 GROUP BY
     po.procedure_concept_id,
     FLOOR((YEAR(po.procedure_date) - p.year_of_birth) / 10)

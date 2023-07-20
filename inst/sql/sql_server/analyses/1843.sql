@@ -24,7 +24,7 @@ WITH cte1 AS (
         AND m.measurement_date >= op.observation_period_start_date
         AND m.measurement_date <= op.observation_period_end_date
     WHERE DATEDIFF(year, p.date_of_birth, m.measurement_date) < 19
-        AND measurement_concept_id  > 0
+        AND measurement_concept_id != 0
 ), cte3 as (
     SELECT *,
         case
@@ -43,14 +43,14 @@ WITH cte1 AS (
     from cte2
 )
 INSERT INTO @results_database_schema.@results_table (
-select
-    1843 as analysis_id,
-    measurement_concept_id as stratum_1,
-    age_group as stratum_2,
-    CAST(NULL AS VARCHAR(255)) AS stratum_3,
-    CAST(NULL AS VARCHAR(255)) AS stratum_4,
-    CAST(NULL AS VARCHAR(255)) AS stratum_5,
-    COUNT_BIG(*) AS count_value
-from cte3
-group by measurement_concept_id, age_group
+    select
+        1843 as analysis_id,
+        measurement_concept_id as stratum_1,
+        age_group as stratum_2,
+        CAST(NULL AS VARCHAR(255)) AS stratum_3,
+        CAST(NULL AS VARCHAR(255)) AS stratum_4,
+        CAST(NULL AS VARCHAR(255)) AS stratum_5,
+        COUNT_BIG(*) AS count_value
+    from cte3
+    group by measurement_concept_id, age_group
 )

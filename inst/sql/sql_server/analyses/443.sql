@@ -24,7 +24,7 @@ WITH cte1 AS (
         AND co.condition_start_date >= op.observation_period_start_date
         AND co.condition_start_date <= op.observation_period_end_date
     WHERE DATEDIFF(year, p.date_of_birth, co.condition_start_date) < 19 
-        AND condition_concept_id > 0 -- not in original 404 analysis
+        AND condition_concept_id != 0
 ), cte3 as (
     SELECT *,
         case
@@ -43,14 +43,14 @@ WITH cte1 AS (
     from cte2
 )
 INSERT INTO @results_database_schema.@results_table (
-select 
-    443 as analysis_id,
-    condition_concept_id as stratum_1,
-    age_group as stratum_2,
-    CAST(NULL AS VARCHAR(255)) AS stratum_3,
-    CAST(NULL AS VARCHAR(255)) AS stratum_4,
-    CAST(NULL AS VARCHAR(255)) AS stratum_5,
-    count_big(*) as count_value
-from cte3
-group by condition_concept_id, age_group
+    select 
+        443 as analysis_id,
+        condition_concept_id as stratum_1,
+        age_group as stratum_2,
+        CAST(NULL AS VARCHAR(255)) AS stratum_3,
+        CAST(NULL AS VARCHAR(255)) AS stratum_4,
+        CAST(NULL AS VARCHAR(255)) AS stratum_5,
+        count_big(*) as count_value
+    from cte3
+    group by condition_concept_id, age_group
 )

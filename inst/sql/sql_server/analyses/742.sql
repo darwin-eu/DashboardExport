@@ -16,7 +16,7 @@ JOIN @cdm_database_schema.observation_period op
     ON de.person_id = op.person_id
     AND de.drug_exposure_start_date >= op.observation_period_start_date
     AND de.drug_exposure_start_date <= op.observation_period_end_date
-WHERE drug_concept_id > 0
+WHERE drug_concept_id != 0
 GROUP BY
     de.drug_concept_id,
     FLOOR((YEAR(de.drug_exposure_start_date) - p.year_of_birth) / 10)
