@@ -76,27 +76,16 @@ dashboardExport <- function(
     databaseId = NULL,
     verboseMode = TRUE
 ) {
-    # Setup loggers
-    ParallelLogger::clearLoggers()
-    unlink(file.path(outputFolder, "log_dashboardExport.txt"))
-
-    appenders <- list(
-        ParallelLogger::createFileAppender(
-            layout = ParallelLogger::layoutParallel,
-            fileName = file.path(outputFolder, "log_dashboardExport.txt")
-        )
-    )
+    # Setup logging
+    ParallelLogger::addDefaultFileLogger(file.path(outputFolder, "log_dashboardExport.txt"))
+    ParallelLogger::addDefaultErrorReportLogger(file.path(outputFolder, "errorReportR.txt"))
+    on.exit(ParallelLogger::unregisterLogger("DEFAULT_FILE_LOGGER", silent = TRUE))
+    on.exit(ParallelLogger::unregisterLogger("DEFAULT_ERRORREPORT_LOGGER", silent = TRUE), add = TRUE)
 
     if (verboseMode) {
-        appenders <- list(appenders[[1]], ParallelLogger::createConsoleAppender())
+        ParallelLogger::addDefaultConsoleLogger()
+        on.exit(ParallelLogger::unregisterLogger("DEFAULT_CONSOLE_LOGGER"), add = TRUE)
     }
-
-    logger <- ParallelLogger::createLogger(
-        name = "dashboardExport",
-        threshold = "INFO",
-        appenders = appenders
-    )
-    ParallelLogger::registerLogger(logger)
 
     # Check whether Achilles output is available
     if (!.checkAchillesTablesExist(connectionDetails, resultsDatabaseSchema)) {
