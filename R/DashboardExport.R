@@ -1,6 +1,6 @@
 # @file DashboardExport
 #
-# Copyright 2023 DARWIN-EU (R)
+# Copyright 2023 Darwin EU Coordination Center
 #
 # This file is part of the DashboardExport package
 #
@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# @author DARWIN-EU (R)
+# @author Darwin EU Coordination Center
 # @author Maxim Moinat
 
 
