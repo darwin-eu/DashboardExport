@@ -1,13 +1,13 @@
 Package: DashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: 
   person("Maxim", "Moinat", , "m.moinat@darwin-eu.org", role = c("aut", "cre"))
 Description: Exports Achilles results for the DARWIN Database Dashboard.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Depends: 
   R (>= 3.5.0)
 Imports:

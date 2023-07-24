@@ -4,3 +4,5 @@
 ^.+session\.sql$
 ^\.vscode$
 ^LICENSE\.md$
+^.*\.Rproj$
+^\.Rproj\.user$

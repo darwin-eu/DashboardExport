@@ -1,4 +1,5 @@
 -- 740	Number of drug occurrence records, by route_concept_id
+INSERT INTO @results_database_schema.@results_table
 SELECT 
     740 AS analysis_id,
     CAST(de.route_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -14,3 +15,4 @@ JOIN @cdm_database_schema.observation_period op
     AND de.drug_exposure_start_date >= op.observation_period_start_date
     AND de.drug_exposure_start_date <= op.observation_period_end_date
 GROUP BY de.route_concept_id
+;
