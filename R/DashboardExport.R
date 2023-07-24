@@ -40,7 +40,11 @@
 #' @param cdmDatabaseSchema    	   Fully qualified name of database schema that contains OMOP CDM schema.
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_instance.dbo'.
-#' @param resultsDatabaseSchema	   Fully qualified name of database schema that we can write final results to.
+#' @param resultsDatabaseSchema	   Fully qualified name of database schema that we can write results to.
+#'                                 On SQL Server, this should specifiy both the database and the schema,
+#'                                 so for example, on SQL Server, 'cdm_results.dbo'.
+#' @param achillesDatabaseSchema   (OPTIONAL) Fully qualified name of database schema where the Achilles results
+#'                                 tables can be found (achilles_results, achilles_results_dist).
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_results.dbo'.
 #' @param vocabDatabaseSchema	   (OPTIONAL) String name of database schema that contains OMOP Vocabulary.
@@ -70,6 +74,7 @@ dashboardExport <- function(
     connectionDetails,
     cdmDatabaseSchema,
     resultsDatabaseSchema,
+    achillesDatabaseSchema = resultsDatabaseSchema,
     vocabDatabaseSchema = cdmDatabaseSchema,
     smallCellCount = 5,
     outputFolder = "output",
@@ -77,22 +82,30 @@ dashboardExport <- function(
     verboseMode = TRUE
 ) {
     # Setup logging
+    ParallelLogger::clearLoggers()
+
     ParallelLogger::addDefaultFileLogger(file.path(outputFolder, "log_dashboardExport.txt"))
     ParallelLogger::addDefaultErrorReportLogger(file.path(outputFolder, "errorReportR.txt"))
     on.exit(ParallelLogger::unregisterLogger("DEFAULT_FILE_LOGGER", silent = TRUE))
     on.exit(ParallelLogger::unregisterLogger("DEFAULT_ERRORREPORT_LOGGER", silent = TRUE), add = TRUE)
 
     if (verboseMode) {
-        ParallelLogger::addDefaultConsoleLogger()
+        ParallelLogger::registerLogger(
+            ParallelLogger::createLogger(
+                name = "DEFAULT_CONSOLE_LOGGER",
+                threshold = "INFO",
+                appenders = list(ParallelLogger::createConsoleAppender(layout = ParallelLogger::layoutTimestamp))
+            )
+        )
         on.exit(ParallelLogger::unregisterLogger("DEFAULT_CONSOLE_LOGGER"), add = TRUE)
     }
 
-    # Check whether Achilles output is available
-    if (!.checkAchillesTablesExist(connectionDetails, resultsDatabaseSchema)) {
+    ParallelLogger::logInfo(sprintf("Checking that Achilles results are available in schema '%s'", achillesDatabaseSchema))
+    if (!.checkAchillesTablesExist(connectionDetails, achillesDatabaseSchema)) {
         ParallelLogger::logError("The output from the Achilles analyses is required.")
         ParallelLogger::logInfo(sprintf(
             "Please run Achilles first and make sure the resulting Achilles tables are in the given results schema ('%s').", # nolint
-            resultsDatabaseSchema)
+            achillesDatabaseSchema)
         )
         return(NULL)
     }
@@ -100,7 +113,7 @@ dashboardExport <- function(
     # Check whether results for required Achilles analyses is available.
     # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
     expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 112, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
-    analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, resultsDatabaseSchema)
+    analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
     missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
     if (length(missingAnalysisIds) > 0) {
         ParallelLogger::logError(
@@ -112,9 +125,9 @@ dashboardExport <- function(
     }
 
     # Display Achilles metadata
-    achillesMetadata <- .getAchillesMetadata(connectionDetails, resultsDatabaseSchema)
+    achillesMetadata <- .getAchillesMetadata(connectionDetails, achillesDatabaseSchema)
     ParallelLogger::logInfo(sprintf(
-        "Running DashboardExport, exporting data from Achilles v%s, executed on %s for '%s' (n=%dk).",
+        "Achilles v%s results found. Executed on %s for '%s' (n=%dk).",
         achillesMetadata$ACHILLES_VERSION,
         achillesMetadata$ACHILLES_EXECUTION_DATE,
         achillesMetadata$ACHILLES_SOURCE_NAME,
@@ -148,6 +161,7 @@ dashboardExport <- function(
                 packageName = "DashboardExport",
                 dbms = connectionDetails$dbms,
                 results_database_schema = resultsDatabaseSchema,
+                achilles_database_schema = achillesDatabaseSchema,
                 min_cell_count = smallCellCount,
                 analysis_ids = analysisIds,
                 de_results_table = 'dashboard_export_results',
@@ -329,7 +343,7 @@ getRequiredAnalysisIds <- function() {
         progressBar = FALSE,
         reportOverallTime = FALSE
     )
-    ParallelLogger::logInfo('DashboardExport results table created')
+    ParallelLogger::logInfo(sprintf('Executing DashboardExport analyses, writing to %s.%s', resultsDatabaseSchema, resultsTable))
 
     # Execute DashboardExport Analyses
     analysisDetails <- .readRequiredAnalyses()

@@ -63,3 +63,7 @@ errorReportSql.txt
 # Mac
 .DS_store
 *.session.sql
+
+# extra folder, except codeToRun.R
+extra
+!codeToRun.R

@@ -30,7 +30,7 @@ FROM (
         stratum_2 as stratum_4, -- Achilles version
         stratum_3 as stratum_5, -- Achilles execution date
         count_value as count_value -- Achilles distinct person count
-    FROM @results_database_schema.achilles_results
+    FROM @achilles_database_schema.achilles_results
     WHERE analysis_id = 0
 
     UNION ALL
@@ -38,7 +38,7 @@ FROM (
     -- Regular achilles_results
     SELECT 
         CASE 
-            -- Re-id analysis_id xx30 to prevent clashes
+            -- Re-id Achilles analysis_id xx30 to prevent clashes
             WHEN analysis_id in (430,630,730,830,1830,2130) THEN analysis_id + 10
             ELSE analysis_id 
         END as analysis_id,
@@ -48,7 +48,7 @@ FROM (
         stratum_4,
         stratum_5,
         count_value
-    FROM @results_database_schema.achilles_results
+    FROM @achilles_database_schema.achilles_results
     WHERE analysis_id > 0 
     AND analysis_id < 2000000 -- exclude timings
 
@@ -82,7 +82,7 @@ SELECT
     p25_value,
     P75_value,
     p90_value
-FROM @results_database_schema.achilles_results_dist
+FROM @achilles_database_schema.achilles_results_dist
 WHERE count_value > @min_cell_count 
     AND analysis_id > 0 -- otherwise analysis_id 0 duplicated
     AND analysis_id < 2000000 -- exclude timings
