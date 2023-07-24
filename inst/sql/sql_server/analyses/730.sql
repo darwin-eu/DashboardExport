@@ -1,5 +1,5 @@
 -- 730	Number of descendant drug exposure records, by drug_concept_id
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
     730 as analysis_id,
     CAST(co.drug_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -18,4 +18,4 @@ JOIN (
 ) c
     ON c.concept_id = co.drug_concept_id
 GROUP BY co.drug_concept_id, c.DRC
-)
+;

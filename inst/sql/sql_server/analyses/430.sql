@@ -1,5 +1,5 @@
 -- 430	Number of descendant condition occurrence records,by condition_concept_id
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
     430 as analysis_id,
     CAST(co.CONDITION_CONCEPT_ID AS VARCHAR(255)) AS stratum_1,
@@ -18,4 +18,4 @@ JOIN (
 ) c
     ON c.CONCEPT_ID = co.CONDITION_CONCEPT_ID
 GROUP BY co.CONDITION_CONCEPT_ID, c.DRC
-)
+;

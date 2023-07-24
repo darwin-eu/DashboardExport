@@ -42,7 +42,7 @@ WITH cte1 AS (
         end as age_group
     from cte2
 )
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
     select 
         443 as analysis_id,
         condition_concept_id as stratum_1,
@@ -53,4 +53,4 @@ INSERT INTO @results_database_schema.@results_table (
         count_big(*) as count_value
     from cte3
     group by condition_concept_id, age_group
-)
+;

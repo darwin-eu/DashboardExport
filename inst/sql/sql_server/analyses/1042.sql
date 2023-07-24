@@ -1,5 +1,5 @@
 -- 1042 Number of records by condition_concept_id by age decile
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
 	1042 AS analysis_id,
     ce.condition_concept_id AS stratum_1,
@@ -19,4 +19,4 @@ WHERE condition_concept_id != 0
 GROUP BY
     ce.condition_concept_id,
     FLOOR((YEAR(ce.condition_era_start_date) - p.year_of_birth) / 10)
-)
+;

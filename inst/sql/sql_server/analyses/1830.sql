@@ -1,5 +1,5 @@
 -- 1830	Number of descendant measurement occurrence records, by measurement_concept_id
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
     1830 as analysis_id,
     CAST(co.measurement_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -18,4 +18,4 @@ JOIN (
 ) c
     ON c.concept_id = co.measurement_concept_id
 GROUP BY co.measurement_concept_id, c.DRC
-)
+;

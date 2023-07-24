@@ -1,5 +1,5 @@
 -- 242 Number of records by visit_concept_id by age decile
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
 	242 AS analysis_id,
     vo.visit_concept_id AS stratum_1,
@@ -19,4 +19,4 @@ WHERE visit_concept_id != 0
 GROUP BY
     vo.visit_concept_id,
     FLOOR((YEAR(vo.visit_start_date) - p.year_of_birth) / 10)
-)
+;

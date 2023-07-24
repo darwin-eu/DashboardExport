@@ -1,5 +1,5 @@
 -- CDM Source
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
     SELECT
         5000 as analysis_id,
         cdm_source_name as stratum_1,
@@ -14,5 +14,4 @@ INSERT INTO @results_database_schema.@results_table (
         from @vocab_database_schema.vocabulary 
         where vocabulary_id = 'None'
     ) vocabulary
-)
 ;

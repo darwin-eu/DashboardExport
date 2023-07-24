@@ -1,5 +1,5 @@
 -- 630	Number of descendant procedure occurrence records, by procedure_concept_id
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
     630 as analysis_id,
     CAST(co.procedure_concept_id AS VARCHAR(255)) AS stratum_1,
@@ -18,4 +18,4 @@ JOIN (
 ) c
     ON c.concept_id = co.procedure_concept_id
 GROUP BY co.procedure_concept_id, c.DRC
-)
+;

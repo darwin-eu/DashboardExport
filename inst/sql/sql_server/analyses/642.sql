@@ -1,6 +1,6 @@
 -- 642 Number of records by procedure_concept_id by age decile
 
-INSERT INTO @results_database_schema.@results_table (
+INSERT INTO @results_database_schema.@results_table
 SELECT
     642 AS analysis_id,
     po.procedure_concept_id AS stratum_1,
@@ -20,4 +20,4 @@ WHERE procedure_concept_id != 0
 GROUP BY
     po.procedure_concept_id,
     FLOOR((YEAR(po.procedure_date) - p.year_of_birth) / 10)
-)
+;
