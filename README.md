@@ -3,6 +3,8 @@ Export descriptive statistics from a subset of Achilles results for the DARWIN-E
 All counts are rounded up to nearest hundred and counts below the `smallCellCount` are not exported.
 For an overview of the exported Achilles analyses, see [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv).
 
+Publicly available repo available on (DARWIN-EU/DashboardExport)[https://github.com/darwin-eu/DashboardExport]
+
 ## How to execute
 1. Install [Achilles](https://github.com/OHDSI/Achilles) and DashboardExport.
 2. Run Achilles. See [this guide](https://ohdsi.github.io/Achilles/articles/RunningAchilles.html) for detailed instructions
@@ -12,9 +14,14 @@ One csv file will be written to the given output folder. This file can be upload
 
 ### Sample code
 ```R
-#install.packages("remotes")
-#remotes::install_github('ohdsi/Achilles')
-#remotes::install_github('darwin-eu/DashboardExport')
+if (!require(remotes)) {install.packages('remotes')}
+if (!require(Achilles)) {
+    remotes::install_github('OHDSI/Achilles')
+}
+if (!require(DashboardExport)) {
+    remotes::install_github('DARWIN-EU/DashboardExport')
+}
+
 library(Achilles)
 library(DashboardExport)
 

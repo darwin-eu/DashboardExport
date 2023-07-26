@@ -234,6 +234,7 @@ getAnalysisIdsToExport <- function() {
 
 #' @title Get minimally required Achilles analysis ids, used in the DARWIN Database Dashboard
 #' @return vector of integer analysis ids
+#' At the moment not used
 #' @export
 getRequiredAnalysisIds <- function() {
     df <- .readRequiredAnalyses()
