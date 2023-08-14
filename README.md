@@ -49,8 +49,9 @@ Achilles::achilles(
     connectionDetails = connectionDetails, 
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema, 
-    outputFolder = "achilles_output",
-    analysisIds = DashboardExport::getRequiredAnalysisIds()
+    outputFolder = "achilles_output"
+    # For running only the minimally required Achilles analyses:
+    # analysisIds = DashboardExport::getRequiredAnalysisIds()
 )
 
 DashboardExport::dashboardExport(
