@@ -112,7 +112,7 @@ dashboardExport <- function(
 
     # Check whether results for required Achilles analyses is available.
     # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
-    expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 112, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
+    expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
     analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
     missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
     if (length(missingAnalysisIds) > 0) {
