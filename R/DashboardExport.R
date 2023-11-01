@@ -194,35 +194,23 @@ dashboardExport <- function(
 }
 
 .checkAchillesTablesExist <- function(connectionDetails, resultsDatabaseSchema) {
-  requiredAchillesTables <- c("achilles_analysis", "achilles_results", "achilles_results_dist")
-  achillesTablesExist <- tryCatch({
-    connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-    for (table in requiredAchillesTables) {
-      sql <- SqlRender::translate(
-               SqlRender::render(
-                 "SELECT COUNT(*) FROM @resultsDatabaseSchema.@table",
-                 resultsDatabaseSchema = resultsDatabaseSchema,
-                 table = table
-               ),
-               targetDialect = "postgresql"
-             )
-      DatabaseConnector::executeSql(
-        connection = connection,
-        sql = sql,
-        progressBar = FALSE,
-        reportOverallTime = FALSE
+  required_achilles_tables <- c("achilles_analysis", "achilles_results", "achilles_results_dist")
+
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  on.exit(DatabaseConnector::disconnect(connection = connection))
+
+  achilles_tables_exist <- TRUE
+  for (table in required_achilles_tables) {
+    table_exists <- DatabaseConnector::existsTable(connection, resultsDatabaseSchema, table)
+    if (!table_exists) {
+      ParallelLogger::logWarn(
+        sprintf("Achilles table '%s.%s' has not been found", resultsDatabaseSchema, table)
       )
     }
-    TRUE
-  },
-  error = function(e) {
-    FALSE
-  },
-  finally = {
-    DatabaseConnector::disconnect(connection = connection)
-    rm(connection)
-  })
-  return(achillesTablesExist)
+    achilles_tables_exist <- achilles_tables_exist && table_exists
+  }
+
+  return(achilles_tables_exist)
 }
 
 #' @title Get Achilles analysis ids to be exported
