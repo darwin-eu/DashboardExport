@@ -8,7 +8,6 @@ dashboardExport(
   connectionDetails,
   cdmDatabaseSchema,
   resultsDatabaseSchema,
-  vocabDatabaseSchema = cdmDatabaseSchema,
   smallCellCount = 5,
   outputFolder = "output",
   databaseId = NULL,
@@ -26,11 +25,6 @@ so for example, on SQL Server, 'cdm_instance.dbo'.}
 \item{resultsDatabaseSchema}{Fully qualified name of database schema that we can write final results to.
 On SQL Server, this should specifiy both the database and the schema,
 so for example, on SQL Server, 'cdm_results.dbo'.}
-
-\item{vocabDatabaseSchema}{(OPTIONAL) String name of database schema that contains OMOP Vocabulary.
-On SQL Server, this should specifiy both the database and the schema,
-so for example 'results.dbo'.
-Default = \code{cdmDatabaseSchema}.}
 
 \item{smallCellCount}{To avoid patient identifiability, cells with small counts
 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.

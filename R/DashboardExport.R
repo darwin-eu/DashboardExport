@@ -47,10 +47,6 @@
 #'                                 tables can be found (achilles_results, achilles_results_dist).
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_results.dbo'.
-#' @param vocabDatabaseSchema	   (OPTIONAL) String name of database schema that contains OMOP Vocabulary.
-#'                                 On SQL Server, this should specifiy both the database and the schema,
-#'                                 so for example 'results.dbo'.
-#'                                 Default = \code{cdmDatabaseSchema}.
 #' @param smallCellCount           To avoid patient identifiability, cells with small counts
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
@@ -75,7 +71,6 @@ dashboardExport <- function(
     cdmDatabaseSchema,
     resultsDatabaseSchema,
     achillesDatabaseSchema = resultsDatabaseSchema,
-    vocabDatabaseSchema = cdmDatabaseSchema,
     smallCellCount = 5,
     outputFolder = "output",
     databaseId = NULL,
@@ -146,7 +141,6 @@ dashboardExport <- function(
     .executeDasbhoardExportAnalyses(
         connectionDetails = connectionDetails,
         cdmDatabaseSchema = cdmDatabaseSchema,
-        vocabDatabaseSchema = vocabDatabaseSchema,
         resultsDatabaseSchema = resultsDatabaseSchema
     )
 
@@ -319,7 +313,7 @@ getRequiredAnalysisIds <- function() {
   sourceName
 }
 
-.executeDasbhoardExportAnalyses <- function(connectionDetails, cdmDatabaseSchema, vocabDatabaseSchema, resultsDatabaseSchema) {
+.executeDasbhoardExportAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema) {
     connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
     on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
 
@@ -360,7 +354,6 @@ getRequiredAnalysisIds <- function() {
             packageName = "DashboardExport",
             dbms = connectionDetails$dbms,
             cdm_database_schema = cdmDatabaseSchema,
-            vocab_database_schema = vocabDatabaseSchema,
             results_database_schema = resultsDatabaseSchema,
             results_table = resultsTable,
             warnOnMissingParameters = FALSE

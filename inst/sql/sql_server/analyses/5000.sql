@@ -11,7 +11,7 @@ INSERT INTO @results_database_schema.@results_table
     FROM @cdm_database_schema.cdm_source
     cross join (
         select vocabulary_version 
-        from @vocab_database_schema.vocabulary 
+        from @cdm_database_schema.vocabulary
         where vocabulary_id = 'None'
     ) vocabulary
 ;
