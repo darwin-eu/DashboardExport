@@ -16,6 +16,8 @@ Imports:
   SqlRender,
   readr
 Suggests:
-  Achilles
+    Achilles,
+    testthat (>= 3.0.0)
 Remotes:
   OHDSI/Achilles
+Config/testthat/edition: 3
