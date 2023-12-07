@@ -1,4 +1,8 @@
 # DashboardExport
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/darwin-eu-dev/DashboardExport/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/DashboardExport/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 Export descriptive statistics from a subset of Achilles results for the DARWIN-EU Database Dashboard.
 All counts are rounded up to nearest hundred and counts below the `smallCellCount` are not exported.
 For an overview of the exported Achilles analyses, see [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv).
