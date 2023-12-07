@@ -339,7 +339,7 @@ getRequiredAnalysisIds <- function() {
     analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
     for (analysisId in analysesIdsToExecute) {
         ParallelLogger::logInfo(sprintf(
-            "Analysis %d (%s) -- START",
+            "Analysis %s (%s) -- START",
             analysisId,
             analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
         ))

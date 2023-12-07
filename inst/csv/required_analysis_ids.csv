@@ -36,6 +36,7 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 430,"Number of descendant condition occurrence records, by condition_concept_id",custom,condition_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
 442,Number of records by condition_concept_id by age decile,custom,condition_concept_id,age decile,,,,
 443,Number of records by condition_concept_id by ICH age group,custom,condition_concept_id,ich age group,,,,
+444,"Number of persons with descendant condition occurrence records by condition_concept_id",custom,condition_concept_id,,,,,
 501,"Number of records of death, by cause_concept_id",analysis_results,cause_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records"
 502,Number of persons by death month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 506,Distribution of age at death by gender,analysis_results_dist,gender_concept_id,,,,,
