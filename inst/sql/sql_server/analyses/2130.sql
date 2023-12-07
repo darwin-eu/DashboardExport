@@ -12,7 +12,7 @@ FROM @cdm_database_schema.device_exposure co
 JOIN (
     SELECT ca.ancestor_concept_id AS concept_id, COUNT_BIG(*) AS DRC
     FROM @cdm_database_schema.device_exposure co
-    JOIN @vocab_database_schema.concept_ancestor ca
+    JOIN @cdm_database_schema.concept_ancestor ca
         ON ca.descendant_concept_id = co.device_concept_id
     GROUP BY ca.ancestor_concept_id
 ) c
