@@ -19,7 +19,7 @@ if (!hasAchillesResults) {
     connectionDetails = params$connectionDetails,
     cdmDatabaseSchema = params$cdmDatabaseSchema,
     resultsDatabaseSchema = params$resultsDatabaseSchema,
-    outputFolder = file.path(params$outputFolder, 'achilles-logs'),
+    outputFolder = testthat::test_path('achilles_logs'),
     analysisIds = c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720),
     verboseMode = FALSE
   )
