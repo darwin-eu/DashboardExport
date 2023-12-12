@@ -7,7 +7,7 @@ params <- list(
     outputFolder = testthat::test_path('test_output')
 )
 
-hasAchillesResults <- CdmOnboarding:::.checkAchillesTablesExist(
+hasAchillesResults <- DashboardExport:::.checkAchillesTablesExist(
   connectionDetails = params$connectionDetails,
   resultsDatabaseSchema = params$resultsDatabaseSchema
 )
