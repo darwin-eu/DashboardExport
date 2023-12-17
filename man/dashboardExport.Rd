@@ -8,6 +8,7 @@ dashboardExport(
   connectionDetails,
   cdmDatabaseSchema,
   resultsDatabaseSchema,
+  achillesDatabaseSchema = resultsDatabaseSchema,
   smallCellCount = 5,
   outputFolder = "output",
   databaseId = NULL,
@@ -22,7 +23,12 @@ dashboardExport(
 On SQL Server, this should specifiy both the database and the schema,
 so for example, on SQL Server, 'cdm_instance.dbo'.}
 
-\item{resultsDatabaseSchema}{Fully qualified name of database schema that we can write final results to.
+\item{resultsDatabaseSchema}{Fully qualified name of database schema that we can write results to.
+On SQL Server, this should specifiy both the database and the schema,
+so for example, on SQL Server, 'cdm_results.dbo'.}
+
+\item{achillesDatabaseSchema}{(OPTIONAL) Fully qualified name of database schema where the Achilles results
+tables can be found (achilles_results, achilles_results_dist).
 On SQL Server, this should specifiy both the database and the schema,
 so for example, on SQL Server, 'cdm_results.dbo'.}
 
