@@ -4,8 +4,8 @@ test_that("dashboardExport works", {
     cdmDatabaseSchema = params$cdmDatabaseSchema,
     resultsDatabaseSchema = params$resultsDatabaseSchema,
     databaseId = params$databaseId,
-    outputFolder = testthat::test_path('de_output')
+    outputFolder = params$outputFolder
   )
 
-  testthat::expect_length(list.files(testthat::test_path('de_output'), pattern = '*.csv'), 1)
+  testthat::expect_length(list.files(params$outputFolder, pattern = '*.csv'), 1)
 })
