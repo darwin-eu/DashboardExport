@@ -12,7 +12,7 @@ FROM @cdm_database_schema.CONDITION_OCCURRENCE co
 JOIN (
     SELECT ca.ANCESTOR_CONCEPT_ID AS CONCEPT_ID, COUNT_BIG(*) AS DRC
     FROM @cdm_database_schema.CONDITION_OCCURRENCE co
-    JOIN @vocab_database_schema.CONCEPT_ANCESTOR ca
+    JOIN @cdm_database_schema.CONCEPT_ANCESTOR ca
         ON ca.DESCENDANT_CONCEPT_ID = co.CONDITION_CONCEPT_ID
     GROUP BY ca.ANCESTOR_CONCEPT_ID
 ) c

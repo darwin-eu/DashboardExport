@@ -1,7 +1,13 @@
 # DashboardExport
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/darwin-eu-dev/DashboardExport/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/DashboardExport/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 Export descriptive statistics from a subset of Achilles results for the DARWIN-EU Database Dashboard.
 All counts are rounded up to nearest hundred and counts below the `smallCellCount` are not exported.
 For an overview of the exported Achilles analyses, see [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv).
+
+Publicly available repo available on (DARWIN-EU/DashboardExport)[https://github.com/darwin-eu/DashboardExport]
 
 ## How to execute
 1. Install [Achilles](https://github.com/OHDSI/Achilles) and DashboardExport.
@@ -12,9 +18,14 @@ One csv file will be written to the given output folder. This file can be upload
 
 ### Sample code
 ```R
-#install.packages("remotes")
-#remotes::install_github('ohdsi/Achilles')
-#remotes::install_github('darwin-eu/DashboardExport')
+if (!require(remotes)) {install.packages('remotes')}
+if (!require(Achilles)) {
+    remotes::install_github('OHDSI/Achilles')
+}
+if (!require(DashboardExport)) {
+    remotes::install_github('DARWIN-EU/DashboardExport')
+}
+
 library(Achilles)
 library(DashboardExport)
 
@@ -42,8 +53,9 @@ Achilles::achilles(
     connectionDetails = connectionDetails, 
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema, 
-    outputFolder = "achilles_output",
-    analysisIds = DashboardExport::getRequiredAnalysisIds()
+    outputFolder = "achilles_output"
+    # For running only the minimally required Achilles analyses:
+    # analysisIds = DashboardExport::getRequiredAnalysisIds()
 )
 
 DashboardExport::dashboardExport(
