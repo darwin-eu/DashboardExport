@@ -1,6 +1,6 @@
 Package: DashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
-Version: 1.1.0.900
+Version: 1.2.0
 Authors@R: 
   person("Maxim", "Moinat", , "m.moinat@darwin-eu.org", role = c("aut", "cre"))
 Description: Exports Achilles results for the DARWIN Database Dashboard.
