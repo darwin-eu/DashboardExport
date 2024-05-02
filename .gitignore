@@ -66,4 +66,5 @@ errorReportSql.txt
 
 # extra folder, except codeToRun.R
 extra
-!codeToRun.R
+!extra/codeToRun.R
+!extra/codeToRun_export_only.R

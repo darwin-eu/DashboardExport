@@ -1,4 +1,6 @@
-devtools::install_github("darwin-eu/DashboardExport")
+# Here, we assume DashboardExport has been run before and only the export script is executed.
+
+# devtools::install_github("darwin-eu/DashboardExport")
 library(DashboardExport)
 
 dbms <- Sys.getenv("DBMS")
@@ -22,10 +24,10 @@ resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
 outputFolder <- "output"
 databaseId <- Sys.getenv("DATABASE_ID")
 
-DashboardExport::dashboardExport(
-    connectionDetails = connectionDetails,
-    cdmDatabaseSchema = cdmDatabaseSchema,
-    resultsDatabaseSchema = resultsDatabaseSchema,
-    outputFolder = outputFolder,
-    databaseId = databaseId
+DashboardExport::exportAnalyses(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = cdmDatabaseSchema,
+  resultsDatabaseSchema = resultsDatabaseSchema,
+  outputFolder = outputFolder,
+  databaseId = databaseId
 )

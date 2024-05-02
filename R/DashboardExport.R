@@ -56,7 +56,7 @@
 #' @examples
 #' \dontrun{
 #' connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")
-#' results <- dashboardExport(
+#' dashboardExport(
 #'      connectionDetails = connectionDetails,
 #'      cdmDatabaseSchema = "cdm",
 #'      resultsDatabaseSchema = "results",
@@ -142,43 +142,17 @@ dashboardExport <- function(
     resultsDatabaseSchema = resultsDatabaseSchema
   )
 
-  analysisIds <- getAnalysisIdsToExport()
-
-  # Query and write achilles results
-  connection <- DatabaseConnector::connect(connectionDetails)
-  tryCatch({
-    # Obtain the data from the results tables
-    sql <- SqlRender::loadRenderTranslateSql(
-      sqlFilename = "export.sql",
-      packageName = "DashboardExport",
-      dbms = connectionDetails$dbms,
-      results_database_schema = resultsDatabaseSchema,
-      achilles_database_schema = achillesDatabaseSchema,
-      min_cell_count = smallCellCount,
-      analysis_ids = analysisIds,
-      de_results_table = 'dashboard_export_results',
-      package_version = utils::packageVersion(pkg = "DashboardExport")
-    )
-    ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
-    results <- DatabaseConnector::querySql(
-      connection = connection,
-      sql = sql
-    )
-
-    # Save the data to the export folder
-    outputPath <- file.path(
-      outputFolder,
-      sprintf("dashboard_export_%s_%s.csv", databaseId, format(Sys.time(), "%Y%m%d"))
-    )
-    readr::write_csv(results, outputPath)
-    ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
-  }, error = function(e) {
-    ParallelLogger::logError("Export query was not executed successfully")
-    ParallelLogger::logError(e)
-  }, finally = {
-    DatabaseConnector::disconnect(connection = connection)
-    rm(connection)
-  })
+  # Query and write results
+  exportResults(
+    connectionDetails = connectionDetails,
+    cdmDatabaseSchema = cdmDatabaseSchema,
+    resultsDatabaseSchema = resultsDatabaseSchema,
+    achillesDatabaseSchema = achillesDatabaseSchema,
+    smallCellCount = smallCellCount,
+    analysisIds = analysisIds,
+    outputFolder = outputFolder,
+    databaseId = databaseId
+  )
   invisible()
 }
 
