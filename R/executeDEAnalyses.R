@@ -20,63 +20,57 @@
 # @author Maxim Moinat
 
 .executeDEAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema) {
-    connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-    on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
-
-    # Create DashboardExport results table. Drop if exists.
-    resultsTable <- 'dashboard_export_results'
-    ddl_sql <- SqlRender::loadRenderTranslateSql(
-        sqlFilename = 'dashboardExportResults_DDL.sql',
-        packageName = "DashboardExport",
-        dbms = connectionDetails$dbms,
-        results_database_schema = resultsDatabaseSchema,
-        results_table = resultsTable
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
+  # Create DashboardExport results table. Drop if exists.
+  resultsTable <- 'dashboard_export_results'
+  ddl_sql <- SqlRender::loadRenderTranslateSql(
+    sqlFilename = 'dashboardExportResults_DDL.sql',
+    packageName = "DashboardExport",
+    dbms = connectionDetails$dbms,
+    results_database_schema = resultsDatabaseSchema,
+    results_table = resultsTable
+  )
+  DatabaseConnector::executeSql(
+    connection = connection,
+    sql = ddl_sql,
+    errorReportFile = file.path(
+      outputFolder,
+      paste0("dashboardExportError_ddl.txt")
+    ),
+    progressBar = FALSE,
+    reportOverallTime = FALSE
+  )
+  ParallelLogger::logInfo(sprintf('Executing DashboardExport analyses, writing to %s.%s', resultsDatabaseSchema, resultsTable))
+  # Execute DashboardExport Analyses
+  analysisDetails <- .readRequiredAnalyses()
+  analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
+  for (analysisId in analysesIdsToExecute) {
+    ParallelLogger::logInfo(sprintf(
+      "Analysis %d (%s) -- START",
+      analysisId,
+      analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
+    ))
+    sql <- SqlRender::loadRenderTranslateSql(
+      sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
+      packageName = "DashboardExport",
+      dbms = connectionDetails$dbms,
+      cdm_database_schema = cdmDatabaseSchema,
+      results_database_schema = resultsDatabaseSchema,
+      results_table = resultsTable,
+      warnOnMissingParameters = FALSE
     )
-
-    DatabaseConnector::executeSql(
+    tryCatch({
+      DatabaseConnector::executeSql(
         connection = connection,
-        sql = ddl_sql,
+        sql = sql,
         errorReportFile = file.path(
-            outputFolder,
-            paste0("dashboardExportError_ddl.txt")
-        ),
-        progressBar = FALSE,
-        reportOverallTime = FALSE
-    )
-    ParallelLogger::logInfo(sprintf('Executing DashboardExport analyses, writing to %s.%s', resultsDatabaseSchema, resultsTable))
-
-    # Execute DashboardExport Analyses
-    analysisDetails <- .readRequiredAnalyses()
-    analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
-    for (analysisId in analysesIdsToExecute) {
-        ParallelLogger::logInfo(sprintf(
-            "Analysis %d (%s) -- START",
-            analysisId,
-            analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
-        ))
-
-        sql <- SqlRender::loadRenderTranslateSql(
-            sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
-            packageName = "DashboardExport",
-            dbms = connectionDetails$dbms,
-            cdm_database_schema = cdmDatabaseSchema,
-            results_database_schema = resultsDatabaseSchema,
-            results_table = resultsTable,
-            warnOnMissingParameters = FALSE
+          outputFolder,
+          paste0("dashboardExportError_", analysisId, ".txt")
         )
-
-        tryCatch({
-                DatabaseConnector::executeSql(
-                    connection = connection,
-                    sql = sql,
-                    errorReportFile = file.path(
-                        outputFolder,
-                        paste0("dashboardExportError_", analysisId, ".txt")
-                    )
-                )
-            }, error = function(e) {
-                ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", analysisId, e))
-            }
-        )
-    }
+      )
+    }, error = function(e) {
+      ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", analysisId, e))
+    })
+  }
 }

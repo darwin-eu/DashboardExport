@@ -43,7 +43,7 @@
 #' @return vector of integer analysis ids
 #' @export
 getAnalysisIdsToExport <- function() {
-    .readRequiredAnalyses()$analysis_id
+  .readRequiredAnalyses()$analysis_id
 }
 
 #' @title Get minimally required Achilles analysis ids, used in the DARWIN Database Dashboard
@@ -51,66 +51,60 @@ getAnalysisIdsToExport <- function() {
 #' At the moment not used
 #' @export
 getRequiredAnalysisIds <- function() {
-    df <- .readRequiredAnalyses()
-    df[df$used_in_dashboard_materialized_view != "", 'analysis_id']
+  df <- .readRequiredAnalyses()
+  df[df$used_in_dashboard_materialized_view != "", 'analysis_id']
 }
 
 .readRequiredAnalyses <- function() {
-    utils::read.csv(
-        file = system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
-        stringsAsFactors = FALSE
-    )
+  utils::read.csv(
+    file = system.file("csv", "required_analysis_ids.csv", package = "DashboardExport"),
+    stringsAsFactors = FALSE
+  )
 }
 
-.getAvailableAchillesAnalysisIds <- function(connectionDetails, resultsDatabaseSchema) {
-    sql <- SqlRender::loadRenderTranslateSql(
-        sqlFilename = "getAchillesAnalyses.sql",
-        packageName = "DashboardExport",
-        dbms = connectionDetails$dbms,
-        results_database_schema = resultsDatabaseSchema
-    )
+.getAvailableAchillesAnalysisIds <- function(connectionDetails, resultsDatabaseSchema) {  # nolint
+  sql <- SqlRender::loadRenderTranslateSql(
+    sqlFilename = "getAchillesAnalyses.sql",
+    packageName = "DashboardExport",
+    dbms = connectionDetails$dbms,
+    results_database_schema = resultsDatabaseSchema
+  )
 
-    connection <- DatabaseConnector::connect(connectionDetails)
-    result <- tryCatch({
-            DatabaseConnector::querySql(
-                connection = connection,
-                sql = sql
-            )
-        },
-        error = function(e) {
-            ParallelLogger::logError("Could not get available achilles analyses")
-            ParallelLogger::logError(e)
-        },
-        finally = {
-            DatabaseConnector::disconnect(connection = connection)
-            rm(connection)
-        }
+  connection <- DatabaseConnector::connect(connectionDetails)
+  result <- tryCatch({
+    DatabaseConnector::querySql(
+      connection = connection,
+      sql = sql
     )
-    result$ANALYSIS_ID
+  }, error = function(e) {
+    ParallelLogger::logError("Could not get available achilles analyses")
+    ParallelLogger::logError(e)
+  }, finally = {
+    DatabaseConnector::disconnect(connection = connection)
+    rm(connection)
+  })
+  result$ANALYSIS_ID
 }
 
 .getAchillesMetadata <- function(connectionDetails, resultsDatabaseSchema) {
-   sql <- SqlRender::loadRenderTranslateSql(
-        sqlFilename = "getAchillesMetadata.sql",
-        packageName = "DashboardExport",
-        dbms = connectionDetails$dbms,
-        results_database_schema = resultsDatabaseSchema
-    )
+  sql <- SqlRender::loadRenderTranslateSql(
+    sqlFilename = "getAchillesMetadata.sql",
+    packageName = "DashboardExport",
+    dbms = connectionDetails$dbms,
+    results_database_schema = resultsDatabaseSchema
+  )
 
-    connection <- DatabaseConnector::connect(connectionDetails)
-    tryCatch({
-            DatabaseConnector::querySql(
-                connection = connection,
-                sql = sql
-            )
-        },
-        error = function(e) {
-            ParallelLogger::logError("Could not get Achilles metadata.")
-            ParallelLogger::logError(e)
-        },
-        finally = {
-            DatabaseConnector::disconnect(connection = connection)
-            rm(connection)
-        }
+  connection <- DatabaseConnector::connect(connectionDetails)
+  tryCatch({
+    DatabaseConnector::querySql(
+      connection = connection,
+      sql = sql
     )
+  }, error = function(e) {
+    ParallelLogger::logError("Could not get Achilles metadata.")
+    ParallelLogger::logError(e)
+  }, finally = {
+    DatabaseConnector::disconnect(connection = connection)
+    rm(connection)
+  })
 }
