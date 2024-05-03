@@ -8,11 +8,11 @@ exportResults(
   connectionDetails,
   cdmDatabaseSchema,
   resultsDatabaseSchema,
+  outputFolder,
+  databaseId,
   achillesDatabaseSchema = resultsDatabaseSchema,
   smallCellCount = 5,
-  analysisIds = getAnalysisIdsToExport(),
-  outputFolder = outputFolder,
-  databaseId = databaseId
+  analysisIds = getAnalysisIdsToExport()
 )
 }
 \arguments{
@@ -27,6 +27,10 @@ so for example, on SQL Server, 'cdm_instance.dbo'.}
 On SQL Server, this should specifiy both the database and the schema,
 so for example, on SQL Server, 'cdm_results.dbo'.}
 
+\item{outputFolder}{Path to store logs and SQL files}
+
+\item{databaseId}{Name of the source, used in the filename exported}
+
 \item{achillesDatabaseSchema}{(OPTIONAL) Fully qualified name of database schema where the Achilles results
 tables can be found (achilles_results, achilles_results_dist).
 On SQL Server, this should specifiy both the database and the schema,
@@ -35,10 +39,6 @@ so for example, on SQL Server, 'cdm_results.dbo'.}
 \item{smallCellCount}{To avoid patient identifiability, cells with small counts
 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 Default = 5.}
-
-\item{outputFolder}{Path to store logs and SQL files}
-
-\item{databaseId}{Name of the source, used in the filename exported}
 
 \item{analysis_ids}{List of analysis ids to export. Default is to export all analyses.}
 }

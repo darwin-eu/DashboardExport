@@ -24,7 +24,7 @@ resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
 outputFolder <- "output"
 databaseId <- Sys.getenv("DATABASE_ID")
 
-DashboardExport::exportAnalyses(
+DashboardExport::exportResults(
   connectionDetails = connectionDetails,
   cdmDatabaseSchema = cdmDatabaseSchema,
   resultsDatabaseSchema = resultsDatabaseSchema,
