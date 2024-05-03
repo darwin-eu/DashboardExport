@@ -115,5 +115,26 @@ exportResults <- function(
   )
   readr::write_csv(results, outputPath)
   ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
+
+  # Debugging for export format
+  print(
+    results[results['ANALYSIS_ID'] == '5000', ]
+  )
+  print(
+    results[results['ANALYSIS_ID'] == '206', ]
+  )
+
+  utils::write.table(
+    results,
+    file.path(
+      outputFolder,
+      sprintf("dashboard_export_%s_%s_utils_write.csv", databaseId, format(Sys.time(), "%Y%m%d"))
+    ),
+    quote = FALSE,
+    sep = ",",
+    dec = ".",
+    row.names = FALSE
+  )
+
   invisible()
 }
