@@ -67,15 +67,15 @@ exportResults <- function(
   connectionDetails,
   cdmDatabaseSchema,
   resultsDatabaseSchema,
+  outputFolder,
+  databaseId,
   achillesDatabaseSchema = resultsDatabaseSchema,
   smallCellCount = 5,
-  analysisIds = getAnalysisIdsToExport(),
-  outputFolder = outputFolder,
-  databaseId = databaseId
+  analysisIds = getAnalysisIdsToExport()
 ) {
   connection <- DatabaseConnector::connect(connectionDetails)
 
-  tryCatch({
+  results <- tryCatch({
     # Obtain the data from the results tables
     sql <- SqlRender::loadRenderTranslateSql(
       sqlFilename = "export.sql",
@@ -90,23 +90,30 @@ exportResults <- function(
     )
 
     ParallelLogger::logInfo("Exporting achilles_results, achilles_results_dist and dashboard_export_results...")
-    results <- DatabaseConnector::querySql(
+    DatabaseConnector::querySql(
       connection = connection,
       sql = sql
     )
-
-    # Save the data to the export folder
-    outputPath <- file.path(
-      outputFolder,
-      sprintf("dashboard_export_%s_%s.csv", databaseId, format(Sys.time(), "%Y%m%d"))
-    )
-    readr::write_csv(results, outputPath)
-    ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
   }, error = function(e) {
     ParallelLogger::logError("Export query was not executed successfully")
     ParallelLogger::logError(e)
+    NULL
   }, finally = {
     DatabaseConnector::disconnect(connection = connection)
     rm(connection)
+    NULL
   })
+
+  if (is.null(results)) {
+    return(NULL)
+  }
+
+  # Save the data to the export folder
+  outputPath <- file.path(
+    outputFolder,
+    sprintf("dashboard_export_%s_%s.csv", databaseId, format(Sys.time(), "%Y%m%d"))
+  )
+  readr::write_csv(results, outputPath)
+  ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
+  invisible()
 }

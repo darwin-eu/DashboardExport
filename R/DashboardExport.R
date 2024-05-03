@@ -149,7 +149,6 @@ dashboardExport <- function(
     resultsDatabaseSchema = resultsDatabaseSchema,
     achillesDatabaseSchema = achillesDatabaseSchema,
     smallCellCount = smallCellCount,
-    analysisIds = analysisIds,
     outputFolder = outputFolder,
     databaseId = databaseId
   )
