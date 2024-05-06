@@ -24,6 +24,7 @@
   on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
   # Create DashboardExport results table. Drop if exists.
   resultsTable <- 'dashboard_export_results'
+  ParallelLogger::logInfo(sprintf('Creating results table %s.%s', resultsDatabaseSchema, resultsTable))
   ddl_sql <- SqlRender::loadRenderTranslateSql(
     sqlFilename = 'dashboardExportResults_DDL.sql',
     packageName = "DashboardExport",

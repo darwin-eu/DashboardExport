@@ -10,7 +10,7 @@ SELECT
 	CAST(NULL AS VARCHAR(255)) AS stratum_5,
 	COUNT_BIG(ep.person_id) AS count_value
 FROM 
-	@cdm_database_schema.episode
+	@cdm_database_schema.episode ep
 JOIN 
 	@cdm_database_schema.observation_period op 
 ON 
