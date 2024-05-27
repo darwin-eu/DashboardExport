@@ -104,18 +104,19 @@ dashboardExport <- function(
     return(NULL)
   }
 
-  # Check whether results for required Achilles analyses is available.
-  # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
-  expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
-  analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
-  missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
-  if (length(missingAnalysisIds) > 0) {
-    ParallelLogger::logError(
-      sprintf("Missing Achilles analysis ids in result tables: %s.", paste(missingAnalysisIds, collapse = ", "))
-    )
-    ParallelLogger::logInfo("Please rerun Achilles including above analyses.")
-    return(NULL)
-  }
+    # Check whether results for required Achilles analyses is available.
+    # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
+    expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
+    analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
+    missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
+    if (length(missingAnalysisIds) > 0) {
+        ParallelLogger::logWarn(
+            sprintf("Missing results for the following Achilles analyses: %s.",
+            paste(missingAnalysisIds, collapse = ", "))
+        )
+        ParallelLogger::logWarn("We are expecting at least results for the following tables: person (Achilles ids in range 1-20), observation period (100-120), condition occurrence (400-420) and drug exposure (700-720).\n> If the missing Achilles results are expected, press enter to continue. If not, abort (ctrl-c) and rerun Achilles including the above analysis ids.")
+        readline("")
+    }
 
   # Display Achilles metadata
   achillesMetadata <- .getAchillesMetadata(connectionDetails, achillesDatabaseSchema)
