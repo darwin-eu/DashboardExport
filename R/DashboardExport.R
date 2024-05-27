@@ -111,12 +111,12 @@ dashboardExport <- function(
     analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
     missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
     if (length(missingAnalysisIds) > 0) {
-        ParallelLogger::logError(
-            sprintf("Missing Achilles analysis ids in result tables: %s.",
+        ParallelLogger::logWarn(
+            sprintf("Missing results for the following Achilles analyses: %s.",
             paste(missingAnalysisIds, collapse = ", "))
         )
-        ParallelLogger::logInfo("Please rerun Achilles including above analyses.")
-        return(NULL)
+        ParallelLogger::logWarn("We are expecting at least results for the following tables: person (Achilles ids in range 1-20), observation period (100-120), condition occurrence (400-420) and drug exposure (700-720).\n> If the missing Achilles results are expected, press enter to continue. If not, abort (ctrl-c) and rerun Achilles including the above analysis ids.")
+        readline("")
     }
 
     # Display Achilles metadata
