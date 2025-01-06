@@ -3,6 +3,8 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 1,Number of persons,analysis_results,,,,,,"patients_per_country_and_database_type,number_of_patients,avg_num_of_records_per_person,cumulative_observation_time,visit_type_table"
 2,Number of persons by gender,analysis_results,gender_concept_id,,,,,gender
 3,Number of persons by year of birth,analysis_results,year_of_birth,,,,,year_of_birth
+10,Number of all persons by year of birth by gender,analysis_results,year_of_birth,gender_concept_id,,,,year_of_birth
+11,Number of non-deceased persons by year of birth by gender,analysis_results,year_of_birth,gender_concept_id,,,,year_of_birth
 101,"Number of persons by age, with age at first observation period",analysis_results,age,,,,,age1observation_bar_chart
 102,"Number of persons by gender by age, with age at first observation period",analysis_results,gender_concept_id,age,,,,age1observation_table
 103,Distribution of age at first observation period,analysis_results_dist,,,,,,distribution_of_age_at_first_observation_period
