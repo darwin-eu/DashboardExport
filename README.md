@@ -1,6 +1,7 @@
 # DashboardExport
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/darwin-eu-dev/DashboardExport/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/darwin-eu-dev/DashboardExport/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle:stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 Export descriptive statistics from a subset of Achilles results for the DARWIN-EU Database Dashboard.
