@@ -125,5 +125,11 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 2142,Number of records by device_concept_id by age decile,custom,device_concept_id,age decile,,,,
 2143,Number of records by device_concept_id by ICH age group,custom,device_concept_id,ich age group,,,,
 2201,"Number of note records, by note_type_concept_id",analysis_results,note_type_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records"
+2300,"Number of persons with at least one episode occurrence, by episode_concept_id",custom,episode_concept_id,,,,,
+2301,"Number of episode records, by episode_concept_id",custom,episode_concept_id,,,,,
+2320,Number of episode records by start month,custom,calendar month,,,,,
+2330,"Number of descendant episode records, by episode_concept_id",custom,episode_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
+2342,Number of records by episode_concept_id by age decile,custom,episode_concept_id,age decile,,,,
+2343,Number of records by episode_concept_id by ICH age group,custom,episode_concept_id,ich age group,,,,
 3001,"Number of fact relationship records, by relationship_concept_id",custom,relationship_concept_id,,,,,
 5000,First record from the cdm_source table,custom,Source Release date,CDM Release date,CDM version,Vocabulary version,,meta_data_table
