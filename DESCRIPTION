@@ -2,7 +2,8 @@ Package: DashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
 Version: 1.2.1.900
 Authors@R:
-  c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre")),
+  c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0001-8473-2433")),
     person(given = "Sofia", family = "Bazakou",email = "sofia@thehyve.nl", role = "aut")
    )
 Maintainer: Maxim Moinat <m.moinat@erasmusmc.nl>
@@ -21,8 +22,10 @@ Imports:
 Suggests:
   Achilles,
   testthat (>= 3.0.0),
-  Eunomia
+  CDMConnector,
+  duckdb,
+  devtools,
+  withr
 Remotes:
-  OHDSI/Achilles,
-  OHDSI/Eunomia
+  OHDSI/Achilles
 Config/testthat/edition: 3

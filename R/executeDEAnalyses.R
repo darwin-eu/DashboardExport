@@ -19,7 +19,7 @@
 # @author Darwin EU Coordination Center
 # @author Maxim Moinat
 
-.executeDEAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema) {
+.executeDEAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema, outputFolder) {
   connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
   # Create DashboardExport results table. Drop if exists.

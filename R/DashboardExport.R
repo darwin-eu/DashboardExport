@@ -140,7 +140,8 @@ dashboardExport <- function(
   .executeDEAnalyses(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
-    resultsDatabaseSchema = resultsDatabaseSchema
+    resultsDatabaseSchema = resultsDatabaseSchema,
+    outputFolder = outputFolder
   )
 
   # Query and write results

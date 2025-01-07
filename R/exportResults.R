@@ -33,6 +33,8 @@
 #' @param resultsDatabaseSchema	   Fully qualified name of database schema that we can write results to.
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_results.dbo'.
+#' @param outputFolder             Path to store logs and SQL files
+#' @param databaseId               Name of the source, used in the filename exported
 #' @param achillesDatabaseSchema   (OPTIONAL) Fully qualified name of database schema where the Achilles results
 #'                                 tables can be found (achilles_results, achilles_results_dist).
 #'                                 On SQL Server, this should specifiy both the database and the schema,
@@ -40,9 +42,7 @@
 #' @param smallCellCount           To avoid patient identifiability, cells with small counts
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
-#' @param analysis_ids             List of analysis ids to export. Default is to export all analyses.
-#' @param outputFolder             Path to store logs and SQL files
-#' @param databaseId               Name of the source, used in the filename exported
+#' @param analysisIds              List of analysis ids to export. Default is to export all analyses.
 #' @examples
 #' \dontrun{
 #' connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")

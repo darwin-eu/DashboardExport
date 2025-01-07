@@ -40,7 +40,7 @@ so for example, on SQL Server, 'cdm_results.dbo'.}
 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 Default = 5.}
 
-\item{analysis_ids}{List of analysis ids to export. Default is to export all analyses.}
+\item{analysisIds}{List of analysis ids to export. Default is to export all analyses.}
 }
 \description{
 Export Achilles and DashboardExport analysis results to a single csv file.
