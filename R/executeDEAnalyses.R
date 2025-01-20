@@ -19,7 +19,7 @@
 # @author Darwin EU Coordination Center
 # @author Maxim Moinat
 
-.executeDEAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema, outputFolder) {
+.executeDEAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema, outputFolder, cdmVersion) {
   connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
   # Create DashboardExport results table. Drop if exists.
@@ -47,6 +47,15 @@
   analysisDetails <- .readRequiredAnalyses()
   analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
   for (analysisId in analysesIdsToExecute) {
+    # Skip episode queries for older cdm versions
+    if (floor(analysisId / 100) == 23 && cdmVersion != '5.4') {
+      ParallelLogger::logInfo(sprintf(
+        "Analysis %d (%s) -- SKIPPED",
+        analysisId,
+        analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
+      ))
+      next
+    }
     ParallelLogger::logInfo(sprintf(
       "Analysis %d (%s) -- START",
       analysisId,

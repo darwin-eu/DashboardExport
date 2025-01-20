@@ -47,12 +47,14 @@
 #'                                 tables can be found (achilles_results, achilles_results_dist).
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_results.dbo'.
-#' @param smallCellCount           To avoid patient identifiability, cells with small counts
+#' @param smallCellCount           (OPTIONAL) To avoid patient identifiability, cells with small counts
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
-#' @param outputFolder             Path to store logs and SQL files
-#' @param databaseId               Name of the source, used in the filename exported
-#' @param verboseMode              Boolean to determine if the console will show all execution steps. Default = TRUE
+#' @param outputFolder             (OPTIONAL) Path to write the export and store logs and SQL files. 
+#'                                 If the path does not exist, it is created. Defaults to 'output'.
+#' @param databaseId               (OPTIONAL) Name of the source, used in the filename exported. If not given, it is retrieved from cdm_source table.
+#' @param cdmVersion               (OPTIONAL) Version number of the OMOP CDM. If not given, it is retrieved from cdm_source table.
+#' @param verboseMode              (OPTIONAL) Boolean to determine if the console will show all execution steps. Default = TRUE
 #' @examples
 #' \dontrun{
 #' connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")
@@ -73,6 +75,7 @@ dashboardExport <- function(
   smallCellCount = 5,
   outputFolder = "output",
   databaseId = NULL,
+  cdmVersion = NULL,
   verboseMode = TRUE
 ) {
   # Setup logging
@@ -104,19 +107,21 @@ dashboardExport <- function(
     return(NULL)
   }
 
-    # Check whether results for required Achilles analyses is available.
-    # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
-    expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
-    analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
-    missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
-    if (length(missingAnalysisIds) > 0) {
-        ParallelLogger::logWarn(
-            sprintf("Missing results for the following Achilles analyses: %s.",
-            paste(missingAnalysisIds, collapse = ", "))
-        )
-        ParallelLogger::logWarn("We are expecting at least results for the following tables: person (Achilles ids in range 1-20), observation period (100-120), condition occurrence (400-420) and drug exposure (700-720).\n> If the missing Achilles results are expected, press enter to continue. If not, abort (ctrl-c) and rerun Achilles including the above analysis ids.")
-        readline("")
-    }
+  # Check whether results for required Achilles analyses is available.
+  # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
+  expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
+  analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
+  missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
+  if (length(missingAnalysisIds) > 0) {
+    ParallelLogger::logWarn(sprintf(
+      "Missing results for the following Achilles analyses: %s.",
+      paste(missingAnalysisIds, collapse = ", ")
+    ))
+    ParallelLogger::logWarn(
+      "We are expecting at least results for the following tables: person (Achilles ids in range 1-20), observation period (100-120), condition occurrence (400-420) and drug exposure (700-720).\n> If the missing Achilles results are expected, press enter to continue. If not, abort (ctrl-c) and rerun Achilles including the above analysis ids." # nolint
+    )
+    readline("")
+  }
 
   # Display Achilles metadata
   achillesMetadata <- .getAchillesMetadata(connectionDetails, achillesDatabaseSchema)
@@ -137,11 +142,16 @@ dashboardExport <- function(
     databaseId <- .getSourceName(connectionDetails, cdmDatabaseSchema)
   }
 
+  if (is.null(cdmVersion)) {
+    cdmVersion <- .getCdmVersion(connectionDetails, cdmDatabaseSchema)
+  }
+
   .executeDEAnalyses(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
-    outputFolder = outputFolder
+    outputFolder = outputFolder,
+    cdmVersion = cdmVersion
   )
 
   # Query and write results
@@ -175,4 +185,27 @@ dashboardExport <- function(
     rm(connection)
   })
   sourceName
+}
+
+.getCdmVersion <- function(connectionDetails, cdmDatabaseSchema) {
+  sql <- SqlRender::render(
+    sql = "select cdm_version from @cdmDatabaseSchema.cdm_source",
+    cdmDatabaseSchema = cdmDatabaseSchema
+  )
+  sql <- SqlRender::translate(sql = sql, targetDialect = connectionDetails$dbms)
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  cdmVersion <- tryCatch({
+    s <- DatabaseConnector::querySql(connection = connection, sql = sql)
+    s[1, ]
+  }, error = function(e) {
+    ""
+  }, finally = {
+    DatabaseConnector::disconnect(connection = connection)
+    rm(connection)
+  })
+
+  cdmVersion <- gsub(pattern = "v", replacement = "", cdmVersion)
+  cdmVersion <- substr(cdmVersion, 1, 3)
+
+  cdmVersion
 }
