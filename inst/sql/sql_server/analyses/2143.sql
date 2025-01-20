@@ -38,7 +38,6 @@ WITH cte1 AS (
                 then 'Children (2 to 11 years)'
             when age_years < 19
                 then 'Adolescents (12 to 18 years)'
-            else 'Other'
         end as age_group
     from cte2
 )

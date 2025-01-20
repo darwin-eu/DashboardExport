@@ -47,17 +47,18 @@
 #'                                 tables can be found (achilles_results, achilles_results_dist).
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_results.dbo'.
-#' @param smallCellCount           To avoid patient identifiability, cells with small counts
+#' @param smallCellCount           (OPTIONAL) To avoid patient identifiability, cells with small counts
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
-#' @param outputFolder             Path to store logs and SQL files
-#' @param databaseId               Name of the source, used in the filename exported
-#' @param verboseMode              Boolean to determine if the console will show all execution steps. Default = TRUE
+#' @param outputFolder             (OPTIONAL) Path to write the export and store logs and SQL files. 
+#'                                 If the path does not exist, it is created. Defaults to 'output'.
+#' @param databaseId               (OPTIONAL) Name of the source, used in the filename exported. If not given, it is retrieved from cdm_source table.
+#' @param cdmVersion               (OPTIONAL) Version number of the OMOP CDM. If not given, it is retrieved from cdm_source table.
+#' @param verboseMode              (OPTIONAL) Boolean to determine if the console will show all execution steps. Default = TRUE
 #' @examples
 #' \dontrun{
-#' connectionDetails <- createConnectionDetails(dbms="sql server", server="some_server")
-#' # Run Achilles
-#' results <- dashboardExport(
+#' connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")
+#' dashboardExport(
 #'      connectionDetails = connectionDetails,
 #'      cdmDatabaseSchema = "cdm",
 #'      resultsDatabaseSchema = "results",
@@ -67,124 +68,103 @@
 #' }
 #' @export
 dashboardExport <- function(
-    connectionDetails,
-    cdmDatabaseSchema,
-    resultsDatabaseSchema,
-    achillesDatabaseSchema = resultsDatabaseSchema,
-    smallCellCount = 5,
-    outputFolder = "output",
-    databaseId = NULL,
-    verboseMode = TRUE
+  connectionDetails,
+  cdmDatabaseSchema,
+  resultsDatabaseSchema,
+  achillesDatabaseSchema = resultsDatabaseSchema,
+  smallCellCount = 5,
+  outputFolder = "output",
+  databaseId = NULL,
+  cdmVersion = NULL,
+  verboseMode = TRUE
 ) {
-    # Setup logging
-    ParallelLogger::clearLoggers()
+  # Setup logging
+  ParallelLogger::clearLoggers()
 
-    ParallelLogger::addDefaultFileLogger(file.path(outputFolder, "log_dashboardExport.txt"))
-    ParallelLogger::addDefaultErrorReportLogger(file.path(outputFolder, "errorReportR.txt"))
-    on.exit(ParallelLogger::unregisterLogger("DEFAULT_FILE_LOGGER", silent = TRUE))
-    on.exit(ParallelLogger::unregisterLogger("DEFAULT_ERRORREPORT_LOGGER", silent = TRUE), add = TRUE)
+  ParallelLogger::addDefaultFileLogger(file.path(outputFolder, "log_dashboardExport.txt"))
+  ParallelLogger::addDefaultErrorReportLogger(file.path(outputFolder, "errorReportR.txt"))
+  on.exit(ParallelLogger::unregisterLogger("DEFAULT_FILE_LOGGER", silent = TRUE))
+  on.exit(ParallelLogger::unregisterLogger("DEFAULT_ERRORREPORT_LOGGER", silent = TRUE), add = TRUE)
 
-    if (verboseMode) {
-        ParallelLogger::registerLogger(
-            ParallelLogger::createLogger(
-                name = "DEFAULT_CONSOLE_LOGGER",
-                threshold = "INFO",
-                appenders = list(ParallelLogger::createConsoleAppender(layout = ParallelLogger::layoutTimestamp))
-            )
-        )
-        on.exit(ParallelLogger::unregisterLogger("DEFAULT_CONSOLE_LOGGER"), add = TRUE)
-    }
+  if (verboseMode) {
+    ParallelLogger::registerLogger(
+      ParallelLogger::createLogger(
+        name = "DEFAULT_CONSOLE_LOGGER",
+        threshold = "INFO",
+        appenders = list(ParallelLogger::createConsoleAppender(layout = ParallelLogger::layoutTimestamp))
+      )
+    )
+    on.exit(ParallelLogger::unregisterLogger("DEFAULT_CONSOLE_LOGGER"), add = TRUE)
+  }
 
-    ParallelLogger::logInfo(sprintf("Checking that Achilles results are available in schema '%s'", achillesDatabaseSchema))
-    if (!.checkAchillesTablesExist(connectionDetails, achillesDatabaseSchema)) {
-        ParallelLogger::logError("The output from the Achilles analyses is required.")
-        ParallelLogger::logInfo(sprintf(
-            "Please run Achilles first and make sure the resulting Achilles tables are in the given results schema ('%s').", # nolint
-            achillesDatabaseSchema)
-        )
-        return(NULL)
-    }
-
-    # Check whether results for required Achilles analyses is available.
-    # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
-    expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
-    analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
-    missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
-    if (length(missingAnalysisIds) > 0) {
-        ParallelLogger::logWarn(
-            sprintf("Missing results for the following Achilles analyses: %s.",
-            paste(missingAnalysisIds, collapse = ", "))
-        )
-        ParallelLogger::logWarn("We are expecting at least results for the following tables: person (Achilles ids in range 1-20), observation period (100-120), condition occurrence (400-420) and drug exposure (700-720).\n> If the missing Achilles results are expected, press enter to continue. If not, abort (ctrl-c) and rerun Achilles including the above analysis ids.")
-        readline("")
-    }
-
-    # Display Achilles metadata
-    achillesMetadata <- .getAchillesMetadata(connectionDetails, achillesDatabaseSchema)
+  ParallelLogger::logInfo(sprintf("Checking that Achilles results are available in schema '%s'", achillesDatabaseSchema))
+  if (!.checkAchillesTablesExist(connectionDetails, achillesDatabaseSchema)) {
+    ParallelLogger::logError("The output from the Achilles analyses is required.")
     ParallelLogger::logInfo(sprintf(
-        "Achilles v%s results found. Executed on %s for '%s' (n=%dk).",
-        achillesMetadata$ACHILLES_VERSION,
-        achillesMetadata$ACHILLES_EXECUTION_DATE,
-        achillesMetadata$ACHILLES_SOURCE_NAME,
-        achillesMetadata$PERSON_COUNT_THOUSANDS
+      "Please run Achilles first and make sure the resulting Achilles tables are in the given results schema ('%s').", # nolint
+      achillesDatabaseSchema)
+    )
+    return(NULL)
+  }
+
+  # Check whether results for required Achilles analyses is available.
+  # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
+  expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
+  analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
+  missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
+  if (length(missingAnalysisIds) > 0) {
+    ParallelLogger::logWarn(sprintf(
+      "Missing results for the following Achilles analyses: %s.",
+      paste(missingAnalysisIds, collapse = ", ")
     ))
-
-    # Create the export folder if it does not exist
-    if (!file.exists(outputFolder)) {
-        dir.create(outputFolder, recursive = TRUE)
-    }
-
-    if (is.null(databaseId)) {
-        databaseId <- .getSourceName(connectionDetails, cdmDatabaseSchema)
-    }
-
-    .executeDEAnalyses(
-        connectionDetails = connectionDetails,
-        cdmDatabaseSchema = cdmDatabaseSchema,
-        resultsDatabaseSchema = resultsDatabaseSchema
+    ParallelLogger::logWarn(
+      "We are expecting at least results for the following tables: person (Achilles ids in range 1-20), observation period (100-120), condition occurrence (400-420) and drug exposure (700-720).\n> If the missing Achilles results are expected, press enter to continue. If not, abort (ctrl-c) and rerun Achilles including the above analysis ids." # nolint
     )
+    readline("")
+  }
 
-    analysisIds <- getAnalysisIdsToExport()
+  # Display Achilles metadata
+  achillesMetadata <- .getAchillesMetadata(connectionDetails, achillesDatabaseSchema)
+  ParallelLogger::logInfo(sprintf(
+    "Achilles v%s results found. Executed on %s for '%s' (n=%dk).",
+    achillesMetadata$ACHILLES_VERSION,
+    achillesMetadata$ACHILLES_EXECUTION_DATE,
+    achillesMetadata$ACHILLES_SOURCE_NAME,
+    achillesMetadata$PERSON_COUNT_THOUSANDS
+  ))
 
-    # Query and write achilles results
-    connection <- DatabaseConnector::connect(connectionDetails)
-    tryCatch({
-            # Obtain the data from the results tables
-            sql <- SqlRender::loadRenderTranslateSql(
-                sqlFilename = "export.sql",
-                packageName = "DashboardExport",
-                dbms = connectionDetails$dbms,
-                results_database_schema = resultsDatabaseSchema,
-                achilles_database_schema = achillesDatabaseSchema,
-                min_cell_count = smallCellCount,
-                analysis_ids = analysisIds,
-                de_results_table = 'dashboard_export_results',
-                package_version = utils::packageVersion(pkg = "DashboardExport")
-            )
-            ParallelLogger::logInfo("Exporting achilles_results and achilles_results_dist...")
-            results <- DatabaseConnector::querySql(
-                connection = connection,
-                sql = sql
-            )
+  # Create the export folder if it does not exist
+  if (!file.exists(outputFolder)) {
+    dir.create(outputFolder, recursive = TRUE)
+  }
 
-            # Save the data to the export folder
-            outputPath <- file.path(
-                outputFolder,
-                sprintf("dashboard_export_%s_%s.csv", databaseId, format(Sys.time(), "%Y%m%d"))
-            )
-            readr::write_csv(results, outputPath)
-            ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
-        },
-        error = function(e) {
-            ParallelLogger::logError("Export query was not executed successfully")
-            ParallelLogger::logError(e)
-        },
-        finally = {
-            DatabaseConnector::disconnect(connection = connection)
-            rm(connection)
-        }
-    )
-    invisible()
+  if (is.null(databaseId)) {
+    databaseId <- .getSourceName(connectionDetails, cdmDatabaseSchema)
+  }
+
+  if (is.null(cdmVersion)) {
+    cdmVersion <- .getCdmVersion(connectionDetails, cdmDatabaseSchema)
+  }
+
+  .executeDEAnalyses(
+    connectionDetails = connectionDetails,
+    cdmDatabaseSchema = cdmDatabaseSchema,
+    resultsDatabaseSchema = resultsDatabaseSchema,
+    outputFolder = outputFolder,
+    cdmVersion = cdmVersion
+  )
+
+  # Query and write results
+  exportResults(
+    connectionDetails = connectionDetails,
+    cdmDatabaseSchema = cdmDatabaseSchema,
+    resultsDatabaseSchema = resultsDatabaseSchema,
+    achillesDatabaseSchema = achillesDatabaseSchema,
+    smallCellCount = smallCellCount,
+    outputFolder = outputFolder,
+    databaseId = databaseId
+  )
+  invisible()
 }
 
 .getSourceName <- function(connectionDetails, cdmDatabaseSchema) {
@@ -204,4 +184,27 @@ dashboardExport <- function(
     rm(connection)
   })
   sourceName
+}
+
+.getCdmVersion <- function(connectionDetails, cdmDatabaseSchema) {
+  sql <- SqlRender::render(
+    sql = "select cdm_version from @cdmDatabaseSchema.cdm_source",
+    cdmDatabaseSchema = cdmDatabaseSchema
+  )
+  sql <- SqlRender::translate(sql = sql, targetDialect = connectionDetails$dbms)
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  cdmVersion <- tryCatch({
+    s <- DatabaseConnector::querySql(connection = connection, sql = sql)
+    s[1, ]
+  }, error = function(e) {
+    ""
+  }, finally = {
+    DatabaseConnector::disconnect(connection = connection)
+    rm(connection)
+  })
+
+  cdmVersion <- gsub(pattern = "v", replacement = "", cdmVersion)
+  cdmVersion <- substr(cdmVersion, 1, 3)
+
+  cdmVersion
 }

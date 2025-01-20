@@ -12,6 +12,7 @@ dashboardExport(
   smallCellCount = 5,
   outputFolder = "output",
   databaseId = NULL,
+  cdmVersion = NULL,
   verboseMode = TRUE
 )
 }
@@ -32,15 +33,18 @@ tables can be found (achilles_results, achilles_results_dist).
 On SQL Server, this should specifiy both the database and the schema,
 so for example, on SQL Server, 'cdm_results.dbo'.}
 
-\item{smallCellCount}{To avoid patient identifiability, cells with small counts
+\item{smallCellCount}{(OPTIONAL) To avoid patient identifiability, cells with small counts
 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 Default = 5.}
 
-\item{outputFolder}{Path to store logs and SQL files}
+\item{outputFolder}{(OPTIONAL) Path to write the export and store logs and SQL files.
+If the path does not exist, it is created. Defaults to 'output'.}
 
-\item{databaseId}{Name of the source, used in the filename exported}
+\item{databaseId}{(OPTIONAL) Name of the source, used in the filename exported. If not given, it is retrieved from cdm_source table.}
 
-\item{verboseMode}{Boolean to determine if the console will show all execution steps. Default = TRUE}
+\item{cdmVersion}{(OPTIONAL) Version number of the OMOP CDM. If not given, it is retrieved from cdm_source table.}
+
+\item{verboseMode}{(OPTIONAL) Boolean to determine if the console will show all execution steps. Default = TRUE}
 }
 \description{
 \code{dashboardExport} exports a set of descriptive statistics summary from the CDM,
@@ -59,9 +63,8 @@ This is a light-weight version of the EHDEN CatalogueExport, where the Achilles 
 }
 \examples{
 \dontrun{
-connectionDetails <- createConnectionDetails(dbms="sql server", server="some_server")
-# Run Achilles
-results <- dashboardExport(
+connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")
+dashboardExport(
      connectionDetails = connectionDetails,
      cdmDatabaseSchema = "cdm",
      resultsDatabaseSchema = "results",

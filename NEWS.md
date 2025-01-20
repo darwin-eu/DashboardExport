@@ -1,3 +1,14 @@
+# DashboardExport v1.3.0
+
+* Adds analyses for the v5.4 episode table
+* Adds analyses for fact_relationship table 
+* Adds analyses 10 and 11 for persons by year_of_birth and gender
+* Fix for ICH age groups; remove other category
+
+# DashboardExport v1.2.1
+
+* Adds ability to bypass warning when required Achilles analyses are missing.
+
 # DashboardExport v1.2.0
 
 * include achilles analysis 822, 1822, 900, 1000 by @SofiaMp in #36

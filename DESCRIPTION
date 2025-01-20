@@ -1,13 +1,17 @@
 Package: DashboardExport
 Title: Export Achilles results for the DARWIN Database Dashboard
-Version: 1.2.1
-Authors@R: 
-  person("Maxim", "Moinat", , "m.moinat@darwin-eu.org", role = c("aut", "cre"))
+Version: 1.3.0
+Authors@R:
+  c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0001-8473-2433")),
+    person(given = "Sofia", family = "Bazakou",email = "sofia@thehyve.nl", role = "aut")
+   )
+Maintainer: Maxim Moinat <m.moinat@erasmusmc.nl>
 Description: Exports Achilles results for the DARWIN Database Dashboard.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 Depends: 
   R (>= 4.0.0)
 Imports:
@@ -18,8 +22,10 @@ Imports:
 Suggests:
   Achilles,
   testthat (>= 3.0.0),
-  Eunomia
+  CDMConnector,
+  duckdb,
+  devtools,
+  withr
 Remotes:
-  OHDSI/Achilles,
-  OHDSI/Eunomia
+  OHDSI/Achilles
 Config/testthat/edition: 3
