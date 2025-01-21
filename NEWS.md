@@ -1,3 +1,7 @@
+# DashboardExport v1.3.1
+
+* Fix for episode queries
+
 # DashboardExport v1.3.0
 
 * Adds analyses for the v5.4 episode table
