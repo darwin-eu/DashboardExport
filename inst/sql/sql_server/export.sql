@@ -9,7 +9,14 @@ SELECT
     stratum_3,
     stratum_4,
     stratum_5,
-    floor((count_value+99)/100)*100 as count_value,
+    CASE analysis_id
+        WHEN analysis_id % 100 = 20 THEN
+            -- Round to nearest 10 in cases of analyses by month
+            floor((count_value+9)/10)*10
+        ELSE
+            -- Round to nearest upper 100 value otherwise
+            floor((count_value+99)/100)*100
+    END AS count_value,
     cast(null as float) min_value,
     cast(null as float) max_value,
     cast(null as float) avg_value,
@@ -72,7 +79,14 @@ SELECT
     stratum_3,
     stratum_4,
     stratum_5,
-    floor((count_value+99)/100)*100 as count_value,
+    CASE analysis_id
+        WHEN analysis_id % 100 = 20 THEN
+            -- Round to nearest 10 in cases of analyses by month
+            floor((count_value+9)/10)*10
+        ELSE
+            -- Round to nearest upper 100 value otherwise
+            floor((count_value+99)/100)*100
+    END AS count_value,
     min_value,
     max_value,
     round(avg_value, 5),
