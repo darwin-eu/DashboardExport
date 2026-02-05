@@ -9,7 +9,7 @@ SELECT
     stratum_3,
     stratum_4,
     stratum_5,
-    CASE analysis_id
+    CASE
         WHEN analysis_id % 100 = 20 THEN
             -- Round to nearest 10 in cases of analyses by month
             floor((count_value+9)/10)*10
@@ -79,7 +79,7 @@ SELECT
     stratum_3,
     stratum_4,
     stratum_5,
-    CASE analysis_id
+    CASE
         WHEN analysis_id % 100 = 20 THEN
             -- Round to nearest 10 in cases of analyses by month
             floor((count_value+9)/10)*10
