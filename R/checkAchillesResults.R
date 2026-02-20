@@ -27,7 +27,21 @@
 
   achilles_tables_exist <- TRUE
   for (table in required_achilles_tables) {
-    table_exists <- DatabaseConnector::existsTable(connection, resultsDatabaseSchema, table)
+    # If class dbi, then use @
+    if (class(connection) == 'DatabaseConnectorDbiConnection') {
+      table_exists <- DatabaseConnector::existsTable(
+        connection@dbiConnection,
+        resultsDatabaseSchema,
+        table
+      )
+    } else {
+      table_exists <- DatabaseConnector::existsTable(
+        connection,
+        resultsDatabaseSchema,
+        table
+      )
+    }
+    
     if (!table_exists) {
       ParallelLogger::logWarn(
         sprintf("Achilles table '%s.%s' has not been found", resultsDatabaseSchema, table)
