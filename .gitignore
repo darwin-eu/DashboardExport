@@ -59,6 +59,7 @@ rsconnect/
 # Project-specific
 output
 errorReportSql.txt
+local/
 
 # Mac
 .DS_store
