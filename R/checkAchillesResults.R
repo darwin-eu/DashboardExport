@@ -83,7 +83,7 @@ getRequiredAnalysisIds <- function() {
     DatabaseConnector::disconnect(connection = connection)
     rm(connection)
   })
-  result$ANALYSIS_ID
+  result$analysis_id
 }
 
 .getAchillesMetadata <- function(connectionDetails, resultsDatabaseSchema) {
