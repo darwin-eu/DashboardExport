@@ -28,12 +28,17 @@
   achilles_tables_exist <- TRUE
   for (table in required_achilles_tables) {
 
-    if ("dbiConnection" %in% slotNames(connection)) {
-      table_exists <- DBI::dbExistsTable(
-        connection@dbiConnection, DBI::Id(schema = resultsDatabaseSchema, table = table)
-      ) } else { # Classic DatabaseConnector connection
-      table_exists <- DatabaseConnector::existsTable(connection, resultsDatabaseSchema, table)
-    }
+    sql <- "
+        SELECT 1
+        FROM information_schema.tables
+        WHERE table_schema = '@schema'
+          AND table_name   = '@table'
+    "
+
+    sql <- SqlRender::render(sql, schema = resultsDatabaseSchema, table = table)
+    sql <- SqlRender::translate(sql, targetDialect = connectionDetails$dbms)
+
+    table_exists <- nrow(DatabaseConnector::querySql(connection, sql)) > 0
 
     if (!table_exists) {
       ParallelLogger::logWarn(
