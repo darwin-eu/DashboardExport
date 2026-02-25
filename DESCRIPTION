@@ -18,16 +18,14 @@ Imports:
   DatabaseConnector (>= 7.0.0),
   ParallelLogger,
   SqlRender,
-  readr,
-  DBI (>= 1.3.0),
-  rJava (>= 1.0-14)
+  readr
 Suggests:
-  Achilles,
+  Achilles (>= 1.7.2),
   testthat (>= 3.0.0),
   CDMConnector,
   duckdb,
   devtools,
-  withr
+  withr,
+  DBI (>= 1.3.0)
 Remotes:
-  OHDSI/Achilles
 Config/testthat/edition: 3
