@@ -24,13 +24,14 @@
   on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
   # Create DashboardExport results table. Drop if exists.
   resultsTable <- 'dashboard_export_results'
-  ParallelLogger::logInfo(sprintf('Creating results table %s.%s', resultsDatabaseSchema, resultsTable))
+  ParallelLogger::logInfo(sprintf('Creating results table %s.%s/_dist', resultsDatabaseSchema, resultsTable))
   ddl_sql <- SqlRender::loadRenderTranslateSql(
     sqlFilename = 'dashboardExportResults_DDL.sql',
     packageName = "DashboardExport",
     dbms = connectionDetails$dbms,
     results_database_schema = resultsDatabaseSchema,
-    results_table = resultsTable
+    results_table = resultsTable,
+    results_table_dist = paste0(resultsTable, '_dist')
   )
   DatabaseConnector::executeSql(
     connection = connection,
@@ -68,6 +69,7 @@
       cdm_database_schema = cdmDatabaseSchema,
       results_database_schema = resultsDatabaseSchema,
       results_table = resultsTable,
+      results_table_dist = paste0(resultsTable, '_dist'),
       warnOnMissingParameters = FALSE
     )
     tryCatch({
