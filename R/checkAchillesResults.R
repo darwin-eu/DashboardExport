@@ -103,6 +103,7 @@ getRequiredAnalysisIds <- function() {
     DatabaseConnector::disconnect(connection = connection)
     rm(connection)
   })
+  names(result) <- toupper(names(result))
   result$ANALYSIS_ID
 }
 
