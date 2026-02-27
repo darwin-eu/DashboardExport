@@ -36,7 +36,8 @@
 #' This is a light-weight version of the EHDEN CatalogueExport, where the Achilles analyses were rerun.
 #'
 #' @param connectionDetails        An R object of type \code{connectionDetails} created using the function
-#'                                 \code{createConnectionDetails} in the \code{DatabaseConnector} package.
+#'                                 \code{createConnectionDetails} or \code{createDbiConnectionDetails} in
+#'                                 the \code{DatabaseConnector} package.
 #' @param cdmDatabaseSchema    	   Fully qualified name of database schema that contains OMOP CDM schema.
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_instance.dbo'.
