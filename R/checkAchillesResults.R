@@ -27,7 +27,6 @@
 
   achilles_tables_exist <- TRUE
   for (table in required_achilles_tables) {
-
     sql_rendered <- SqlRender::render(
       "SELECT COUNT(*) AS n FROM @schema.@table",
       schema = resultsDatabaseSchema,
@@ -46,13 +45,15 @@
     if (is.na(result)) {
       ParallelLogger::logWarn(sprintf(
         "Achilles table '%s.%s' has not been found.",
-        resultsDatabaseSchema, table
+        resultsDatabaseSchema,
+        table
       ))
       achilles_tables_exist <- FALSE
     } else if (result == 0) {
       ParallelLogger::logWarn(sprintf(
         "Achilles table '%s.%s' is empty.",
-        resultsDatabaseSchema, table
+        resultsDatabaseSchema,
+        table
       ))
       achilles_tables_exist <- FALSE
     }

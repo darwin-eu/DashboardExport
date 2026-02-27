@@ -168,6 +168,7 @@ dashboardExport <- function(
   invisible()
 }
 
+
 .getSourceName <- function(connectionDetails, cdmDatabaseSchema) {
   sql <- SqlRender::render(
     sql = "select cdm_source_name from @cdmDatabaseSchema.cdm_source",
