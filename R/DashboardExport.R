@@ -148,7 +148,7 @@ dashboardExport <- function(
 
   sql <- "
   SELECT COUNT(*) AS n
-  FROM @cdm_database_schema.cdm_source;
+  FROM @cdmdatabaseschema.cdm_source;
   "
   renderedSql <- SqlRender::render(
     sql,
