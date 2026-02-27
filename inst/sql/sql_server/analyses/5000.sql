@@ -6,7 +6,6 @@ WITH ranked_cdm_source AS (
         cdm_version,
         source_release_date,
         vocabulary_version,
-        cdm_version,
         ROW_NUMBER() OVER (ORDER BY cdm_release_date DESC) AS rn
     FROM @cdm_database_schema.cdm_source
 )
@@ -25,4 +24,5 @@ INSERT INTO @results_database_schema.@results_table
         from @cdm_database_schema.vocabulary
         where vocabulary_id = 'None'
     ) vocabulary
+    WHERE rn = 1
 ;
