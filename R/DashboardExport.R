@@ -152,7 +152,7 @@ dashboardExport <- function(
   "
   renderedSql <- SqlRender::render(
     sql,
-    cdm_database_schema = cdm_database_schema
+    cdm_database_schema = cdmDatabaseSchema
   )
 
   translatedSql <- SqlRender::translate(
