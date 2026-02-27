@@ -47,8 +47,6 @@
   analysisDetails <- .readRequiredAnalyses()
   analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
 
-  duplicateCdmSourceCheckSql <- " SELECT COUNT(*) AS cdm_count FROM @cdm_database_schema.cdm_source; "
-
   for (analysisId in analysesIdsToExecute) {
     # Skip episode queries for older cdm versions
     if (floor(analysisId / 100) == 23 && cdmVersion != '5.4') {
@@ -64,22 +62,6 @@
       analysisId,
       analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
     ))
-
-    if (analysis_id == 5000) {
-      checkCdmSource <- SqlRender::render(
-        duplicateCdmSourceCheckSql,
-        cdm_database_schema = cdmDatabaseSchema
-      )
-      checkSql <- SqlRender::translate(checkCdmSource, targetDialect = connectionDetails$dbms )
-
-      cdm_count <- DatabaseConnector::querySql(connection, checkSql)$cdm_count
-
-      if (cdm_count > 1) {
-        ParallelLogger::logWarn(
-          sprintf("Multiple CDM_SOURCE rows detected (%d rows). Using the latest CDM_RELEASE_DATE.", cdm_count)
-        )
-      }
-    }
 
     sql <- SqlRender::loadRenderTranslateSql(
       sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
