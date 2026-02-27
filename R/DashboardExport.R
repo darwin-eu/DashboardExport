@@ -146,12 +146,8 @@ dashboardExport <- function(
     cdmVersion <- .getCdmVersion(connectionDetails, cdmDatabaseSchema)
   }
 
-  sql <- "
-  SELECT COUNT(*) AS n
-  FROM @cdm_database_schema.cdm_source;
-  "
   renderedSql <- SqlRender::render(
-    sql,
+    "SELECT COUNT(*) AS n FROM @cdm_database_schema.cdm_source;",
     cdm_database_schema = cdmDatabaseSchema
   )
 
