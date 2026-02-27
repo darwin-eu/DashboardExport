@@ -27,5 +27,4 @@ Suggests:
   devtools,
   withr,
   DBI (>= 1.3.0)
-Remotes:
 Config/testthat/edition: 3
