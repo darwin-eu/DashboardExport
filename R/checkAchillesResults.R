@@ -27,19 +27,27 @@
 
   achilles_tables_exist <- TRUE
   for (table in required_achilles_tables) {
+    table_exists <- FALSE
+    tryCatch({
+      sql <- if (connectionDetails$dbms == "spark") {
+        "
+        SELECT COUNT(*) AS n FROM @schema.`@table`
+        "
+      } else if (connectionDetails$dbms == "snowflake") {
+        "
+        SELECT COUNT(*) AS n FROM @schema.\"@table\"
+        "
+      } else {
+        "
+        SELECT COUNT(*) AS n FROM @schema.@table
+        " }
 
-    sql <- "
-        SELECT 1
-        FROM information_schema.tables
-        WHERE table_schema = '@schema'
-          AND table_name   = '@table'
-    "
+      sql_rendered <- SqlRender::render(sql, schema = resultsDatabaseSchema, table = table)
+      sql_translated <- SqlRender::translate(sql_rendered, targetDialect = connectionDetails$dbms)
 
-    sql <- SqlRender::render(sql, schema = resultsDatabaseSchema, table = table)
-    sql <- SqlRender::translate(sql, targetDialect = connectionDetails$dbms)
-
-    table_exists <- nrow(DatabaseConnector::querySql(connection, sql)) > 0
-
+      result <- DatabaseConnector::querySql(connection, sql_translated)
+      table_exists <- result$n[1] > 0
+    } , error = function(e) { table_exists <- FALSE })
     if (!table_exists) {
       ParallelLogger::logWarn(
         sprintf("Achilles table '%s.%s' has not been found", resultsDatabaseSchema, table)
