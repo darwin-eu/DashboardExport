@@ -15,17 +15,16 @@ RoxygenNote: 7.3.0
 Depends: 
   R (>= 4.0.0)
 Imports:
-  DatabaseConnector (>= 5.0.0),
+  DatabaseConnector (>= 7.0.0),
   ParallelLogger,
   SqlRender,
   readr
 Suggests:
-  Achilles,
+  Achilles (>= 1.7.2),
   testthat (>= 3.0.0),
   CDMConnector,
   duckdb,
   devtools,
-  withr
-Remotes:
-  OHDSI/Achilles
+  withr,
+  DBI (>= 1.3.0)
 Config/testthat/edition: 3
