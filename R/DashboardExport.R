@@ -159,8 +159,9 @@ dashboardExport <- function(
     renderedSql,
     targetDialect = connectionDetails$dbms
   )
+
   connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-  cdm_source_count <- DatabaseConnector::querySql(connection, translatedSql)$n
+  cdm_source_count <- as.numeric(DatabaseConnector::querySql(connection, translatedSql)$n[1])
 
   if (cdm_source_count > 1) {
     ParallelLogger::logWarn(
@@ -168,6 +169,7 @@ dashboardExport <- function(
       cdm_source_count)
     )
   }
+  DatabaseConnector::disconnect(connection = connection)
 
   .executeDEAnalyses(
     connectionDetails = connectionDetails,
