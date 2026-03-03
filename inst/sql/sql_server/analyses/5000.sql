@@ -1,12 +1,7 @@
 -- CDM Source
 WITH ranked_cdm_source AS (
-    SELECT
-        cdm_source_name,
-        cdm_release_date,
-        cdm_version,
-        source_release_date,
-        vocabulary_version,
-        ROW_NUMBER() OVER (ORDER BY cdm_release_date DESC) AS rn
+    SELECT *,
+       ROW_NUMBER() OVER (ORDER BY cdm_release_date DESC) AS rn
     FROM @cdm_database_schema.cdm_source
 )
 INSERT INTO @results_database_schema.@results_table
