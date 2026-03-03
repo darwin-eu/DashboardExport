@@ -161,7 +161,7 @@ dashboardExport <- function(
 
   if (cdm_source_count > 1) {
     ParallelLogger::logWarn(
-      sprintf("CDM Source Check: Found %d rows in cdm_source. Expected 1. Using the most recent entry with the latest cdm_release_date.",
+      sprintf("CDM Source Check: Found %d rows in cdm_source where only one is expected. Using the row with the latest cdm_release_date.",
       cdm_source_count)
     )
   }
