@@ -46,7 +46,6 @@
   # Execute DashboardExport Analyses
   analysisDetails <- .readRequiredAnalyses()
   analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
-
   for (analysisId in analysesIdsToExecute) {
     # Skip episode queries for older cdm versions
     if (floor(analysisId / 100) == 23 && cdmVersion != '5.4') {
@@ -62,7 +61,6 @@
       analysisId,
       analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
     ))
-
     sql <- SqlRender::loadRenderTranslateSql(
       sqlFilename = file.path('analyses', paste(analysisId, "sql", sep = ".")),
       packageName = "DashboardExport",
