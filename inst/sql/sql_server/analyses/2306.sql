@@ -6,16 +6,16 @@ with cte as (
     p.gender_concept_id,
     ep.episode_start_year - p.year_of_birth AS count_value
   FROM 
-    @cdmDatabaseSchema.person p
+    @cdm_database_schema.person p
   JOIN (
     SELECT 
       ep.person_id,
       ep.episode_concept_id,
       MIN(YEAR(ep.episode_start_date)) AS episode_start_year
     FROM 
-      @cdmDatabaseSchema.episode ep
+      @cdm_database_schema.episode ep
     JOIN 
-      @cdmDatabaseSchema.observation_period op 
+      @cdm_database_schema.observation_period op 
     ON 
       ep.person_id = op.person_id
     AND 

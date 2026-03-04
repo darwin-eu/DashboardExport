@@ -77,7 +77,16 @@ FROM (
     UNION ALL
 
     -- DashboardExport-specific analyses
-    SELECT *
+    SELECT *,
+        cast(null as float) min_value,
+        cast(null as float) max_value,
+        cast(null as float) avg_value,
+        cast(null as float) stdev_value,
+        cast(null as float) median_value,
+        cast(null as float) p10_value,
+        cast(null as float) p25_value,
+        cast(null as float) P75_value,
+        cast(null as float) p90_value
     FROM @results_database_schema.@de_results_table
 
     UNION ALL

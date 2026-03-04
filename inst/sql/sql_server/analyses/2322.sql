@@ -10,9 +10,9 @@ SELECT
 	CAST(NULL AS VARCHAR(255)) AS stratum_5,
 	COUNT_BIG(*) AS count_value
 FROM 
-	@cdmDatabaseSchema.episode ep
+	@cdm_database_schema.episode ep
 JOIN 
-	@cdmDatabaseSchema.observation_period op 
+	@cdm_database_schema.observation_period op 
 ON 
 	ep.person_id = op.person_id
 AND 
