@@ -23,7 +23,7 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 201,"Number of visit occurrence records, by visit_concept_id",analysis_results,visit_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,visit_type_table,domain_filter"
 203,Number of distinct visit occurrence concepts per person,analysis_results_dist,,,,,,"number_of_distinct_per_person,number_of_distinct_per_person"
 206,Distribution of age by visit_concept_id,analysis_results_dist,visit_concept_id,gender_concept_id,,,,visit_age_distribution
-210,Number of visit_occurrence records outside a valid observation period,analysis_results,,,,,,
+210,Number of visit occurrence records outside a valid observation period,analysis_results,,,,,,
 211,Distribution of length of stay by visit_concept_id,analysis_results_dist,visit_concept_id,,,,,
 220,Number of visit occurrence records by visit occurrence start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 242,Number of records by visit_concept_id by age decile,custom,visit_concept_id,age decile,,,,
@@ -83,21 +83,23 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 900,"Number of persons with at least one drug era, by drug_concept_id",analysis_results,drug_concept_id,,,,,
 901,"Number of drug era records, by drug_concept_id",analysis_results,drug_concept_id,,,,,domain_filter
 906,Distribution of age by drug_concept_id,analysis_results,drug_concept_id,gender_concept_id,,,,
-910,Number of drug_era records outside valid observation period,analysis_results,,,,,,
+910,Number of drug era records outside valid observation period,analysis_results,,,,,,
 920,Number of drug era records by drug era start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
-942,Number of records by drug_concept_id by age decile,custom,drug_concept_id,age decile,,,,
-943,Number of records by drug_concept_id by ICH age group,custom,drug_concept_id,ich age group,,,,
+942,Number of drug era records by drug_concept_id by age decile,custom,drug_concept_id,age decile,,,,
+943,Number of drug era records by drug_concept_id by ICH age group,custom,drug_concept_id,ich age group,,,,
 1000,"Number of persons with at least one condition era, by condition_concept_id",analysis_results,condition_concept_id,,,,,
 1001,"Number of condition era records, by condition_concept_id",analysis_results,condition_concept_id,,,,,domain_filter
-1010,Number of condition_era records outside a valid observation period,analysis_results,,,,,,
+1010,Number of condition era records outside a valid observation period,analysis_results,,,,,,
 1020,Number of condition era records by condition era start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 1300,"Number of persons with at least one visit detail, by visit_detail_concept_id",analysis_results,visit_detail_concept_id,,,,,
 1301,"Number of visit detail records, by visit_detail_concept_id",analysis_results,visit_detail_concept_id,,,,,
 1302,"Number of persons by visit detail start month, by visit_detail_concept_id",analysis_results,visit_detail_concept_id,calendar month,,,,
 1306,Distribution of age by visit_detail_concept_id,analysis_results,visit_detail_concept_id,gender_concept_id,,,,
-1310,Number of visit_detail records outside a valid observation period,analysis_results,,,,,,
-1311,Number of visit_detail records with end date < start date,analysis_results,,,,,,
+1310,Number of visit detail records outside a valid observation period,analysis_results,,,,,,
+1311,Number of visit detail records with end date < start date,analysis_results,,,,,,
 1320,Number of visit detail records by visit detail start month,analysis_results,calendar month,,,,,
+1342,Number of visit detail records by visit_concept_id by age decile,custom,visit_concept_id,age decile,,,,
+1343,Number of visit detail records by visit_concept_id by ICH age group,custom,visit_concept_id,ich age group,,,,
 1800,"Number of persons with at least one measurement occurrence, by measurement_concept_id",analysis_results,measurement_concept_id,,,,,domain_filter
 1801,"Number of measurement occurrence records, by measurement_concept_id",analysis_results,measurement_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,domain_filter,concept_browser_table3,concept_coverage2,concept_browser_table2"
 1803,Number of distinct measurement occurrence concepts per person,analysis_results,,,,,,number_of_distinct_per_person
@@ -122,8 +124,8 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 2100,"Number of persons with at least one device exposure, by device_concept_id",analysis_results,device_concept_id,,,,,
 2101,"Number of device exposure records, by device_concept_id",analysis_results,device_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,concept_browser_table3,concept_coverage2,concept_browser_table2"
 2105,"Number of device exposure records, by device_concept_id by device_type_concept_id",analysis_results,device_concept_id,device_type_concept_id,,,,"data_provenance,data_provenance,data_provenance"
-2110,Number of device_exposure records outside valid observation period,analysis_results,,,,,,
-2120,Number of device_exposure records by device_exposure start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
+2110,Number of device exposure records outside valid observation period,analysis_results,,,,,,
+2120,Number of device exposure records by device_exposure start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 2130,"Number of descendant device exposure records, by device_concept_id",custom,device_concept_id,,,,,"concept_browser_table3,concept_coverage2,concept_browser_table2"
 2142,Number of records by device_concept_id by age decile,custom,device_concept_id,age decile,,,,
 2143,Number of records by device_concept_id by ICH age group,custom,device_concept_id,ich age group,,,,

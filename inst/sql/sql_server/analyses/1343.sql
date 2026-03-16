@@ -1,4 +1,4 @@
--- 1043 Number of records by condition_concept_id by ICH age group
+-- 1343 Number of records by visit_detail_concept_id by ICH age group
 -- If day and/or month of birth are not given, then these are set to 1.
 
 WITH cte1 AS (
@@ -13,18 +13,18 @@ WITH cte1 AS (
 ), cte2 as (
     SELECT
         p.person_id,
-        ce.condition_concept_id,
-        DATEDIFF(day, p.date_of_birth, ce.condition_era_start_date) AS age_days,
-        DATEDIFF(year, p.date_of_birth, ce.condition_era_start_date) AS age_years
+        vo.visit_detail_concept_id,
+        DATEDIFF(day, p.date_of_birth, vo.visit_detail_start_date) AS age_days,
+        DATEDIFF(year, p.date_of_birth, vo.visit_detail_start_date) AS age_years
     FROM cte1 p
-    JOIN @cdm_database_schema.condition_era ce
-        ON p.person_id = ce.person_id
+    JOIN @cdm_database_schema.visit_detail vo
+        ON p.person_id = vo.person_id
     JOIN @cdm_database_schema.observation_period op
-        ON ce.person_id = op.person_id
-        AND ce.condition_era_start_date >= op.observation_period_start_date
-        AND ce.condition_era_start_date <= op.observation_period_end_date
-    WHERE DATEDIFF(year, p.date_of_birth, ce.condition_era_start_date) < 19
-        AND condition_concept_id > 0 -- not in original 404 analysis
+        ON vo.person_id = op.person_id
+        AND vo.visit_detail_start_date >= op.observation_period_start_date
+        AND vo.visit_detail_start_date <= op.observation_period_end_date
+    WHERE DATEDIFF(year, p.date_of_birth, vo.visit_detail_start_date) < 19
+        AND visit_detail_concept_id != 0
 ), cte3 as (
     SELECT *,
         case
@@ -43,13 +43,13 @@ WITH cte1 AS (
 )
 INSERT INTO @results_database_schema.@results_table
     select
-        1043 as analysis_id,
-        condition_concept_id as stratum_1,
+        243 as analysis_id,
+        visit_detail_concept_id as stratum_1,
         age_group as stratum_2,
         CAST(NULL AS VARCHAR(255)) AS stratum_3,
         CAST(NULL AS VARCHAR(255)) AS stratum_4,
         CAST(NULL AS VARCHAR(255)) AS stratum_5,
         count_big(*) as count_value
     from cte3
-    group by condition_concept_id, age_group
+    group by visit_detail_concept_id, age_group
 ;
