@@ -18,7 +18,8 @@ dashboardExport(
 }
 \arguments{
 \item{connectionDetails}{An R object of type \code{connectionDetails} created using the function
-\code{createConnectionDetails} or \code{createDbiConnectionDetails} in the \code{DatabaseConnector} package.}
+\code{createConnectionDetails} or \code{createDbiConnectionDetails} in
+the \code{DatabaseConnector} package.}
 
 \item{cdmDatabaseSchema}{Fully qualified name of database schema that contains OMOP CDM schema.
 On SQL Server, this should specifiy both the database and the schema,
