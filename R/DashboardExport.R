@@ -36,7 +36,8 @@
 #' This is a light-weight version of the EHDEN CatalogueExport, where the Achilles analyses were rerun.
 #'
 #' @param connectionDetails        An R object of type \code{connectionDetails} created using the function
-#'                                 \code{createConnectionDetails} in the \code{DatabaseConnector} package.
+#'                                 \code{createConnectionDetails} or \code{createDbiConnectionDetails} in
+#'                                 the \code{DatabaseConnector} package.
 #' @param cdmDatabaseSchema    	   Fully qualified name of database schema that contains OMOP CDM schema.
 #'                                 On SQL Server, this should specifiy both the database and the schema,
 #'                                 so for example, on SQL Server, 'cdm_instance.dbo'.
@@ -109,7 +110,7 @@ dashboardExport <- function(
 
   # Check whether results for required Achilles analyses is available.
   # At least require person, obs. period, condition and drug exposure. Other domains can be empty.
-  expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 117, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
+  expectedAnalysisIds <- c(0, 1, 2, 3, 101, 102, 103, 105, 108, 110, 111, 113, 400, 401, 403, 405, 420, 700, 701, 703, 705, 720)
   analysisIdsAvailable <- .getAvailableAchillesAnalysisIds(connectionDetails, achillesDatabaseSchema)
   missingAnalysisIds <- setdiff(expectedAnalysisIds, analysisIdsAvailable)
   if (length(missingAnalysisIds) > 0) {
@@ -146,6 +147,27 @@ dashboardExport <- function(
     cdmVersion <- .getCdmVersion(connectionDetails, cdmDatabaseSchema)
   }
 
+  renderedSql <- SqlRender::render(
+    "SELECT COUNT(*) AS n FROM @cdm_database_schema.cdm_source;",
+    cdm_database_schema = cdmDatabaseSchema
+  )
+
+  translatedSql <- SqlRender::translate(
+    renderedSql,
+    targetDialect = connectionDetails$dbms
+  )
+
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  cdm_source_count <- as.numeric(DatabaseConnector::querySql(connection, translatedSql)$n[1])
+
+  if (cdm_source_count > 1) {
+    ParallelLogger::logWarn(
+      sprintf("CDM Source Check: Found %d rows in cdm_source where only one is expected. Using the row with the latest cdm_release_date.",
+      cdm_source_count)
+    )
+  }
+  DatabaseConnector::disconnect(connection = connection)
+
   .executeDEAnalyses(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
@@ -166,6 +188,7 @@ dashboardExport <- function(
   )
   invisible()
 }
+
 
 .getSourceName <- function(connectionDetails, cdmDatabaseSchema) {
   sql <- SqlRender::render(

@@ -27,15 +27,37 @@
 
   achilles_tables_exist <- TRUE
   for (table in required_achilles_tables) {
-    table_exists <- DatabaseConnector::existsTable(connection, resultsDatabaseSchema, table)
-    if (!table_exists) {
-      ParallelLogger::logWarn(
-        sprintf("Achilles table '%s.%s' has not been found", resultsDatabaseSchema, table)
-      )
-    }
-    achilles_tables_exist <- achilles_tables_exist && table_exists
-  }
+    sql_rendered <- SqlRender::render(
+      "SELECT COUNT(*) AS n FROM @schema.@table",
+      schema = resultsDatabaseSchema,
+      table = table
+    )
 
+    sql_translated <- SqlRender::translate(sql_rendered, targetDialect = connectionDetails$dbms)
+
+    result <- tryCatch({
+      df <- DatabaseConnector::querySql(connection, sql_translated)
+      df$n[1]
+    }, error = function(e) {
+      NA
+    })
+
+    if (is.na(result)) {
+      ParallelLogger::logWarn(sprintf(
+        "Achilles table '%s.%s' has not been found.",
+        resultsDatabaseSchema,
+        table
+      ))
+      achilles_tables_exist <- FALSE
+    } else if (result == 0) {
+      ParallelLogger::logWarn(sprintf(
+        "Achilles table '%s.%s' is empty.",
+        resultsDatabaseSchema,
+        table
+      ))
+      achilles_tables_exist <- FALSE
+    }
+  }
   return(achilles_tables_exist)
 }
 
@@ -83,6 +105,7 @@ getRequiredAnalysisIds <- function() {
     DatabaseConnector::disconnect(connection = connection)
     rm(connection)
   })
+  names(result) <- toupper(names(result))
   result$ANALYSIS_ID
 }
 
