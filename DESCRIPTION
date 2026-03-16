@@ -1,5 +1,5 @@
 Package: DashboardExport
-Title: Export Achilles results for the DARWIN Database Dashboard
+Title: Create a CSV Export with Characteristics of a Database in the OMOP CDM
 Version: 2.0.0
 Authors@R:
   c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre"),
@@ -7,7 +7,7 @@ Authors@R:
     person(given = "Sofia", family = "Bazakou",email = "sofia@thehyve.nl", role = "aut")
    )
 Maintainer: Maxim Moinat <m.moinat@erasmusmc.nl>
-Description: Exports Achilles results for the DARWIN Database Dashboard.
+Description: Runs a set of bespoke analyses, combining with existing results from Achilles to a CSV Export. The export can be used to create a dashboard with the characteristics of a database in the OMOP CDM.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
