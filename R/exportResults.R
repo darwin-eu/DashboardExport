@@ -90,7 +90,7 @@ exportResults <- function(
       package_version = utils::packageVersion(pkg = "DashboardExport")
     )
 
-    ParallelLogger::logInfo("Exporting achilles_results, achilles_results_dist and dashboard_export_results...")
+    ParallelLogger::logInfo("Exporting achilles_results, achilles_results_dist, dashboard_export_results, dashboard_export_results_dist...")
     DatabaseConnector::querySql(
       connection = connection,
       sql = sql
