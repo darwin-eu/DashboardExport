@@ -21,10 +21,10 @@ WITH cte1 AS (
         ON p.person_id = de.person_id
     JOIN @cdm_database_schema.observation_period op
         ON de.person_id = op.person_id
-        AND de.drug_era >= op.observation_period_start_date
-        AND de.drug_era <= op.observation_period_end_date
+        AND de.drug_era_start_date >= op.observation_period_start_date
+        AND de.drug_era_start_date <= op.observation_period_end_date
     WHERE DATEDIFF(year, p.date_of_birth, de.drug_era_start_date) < 19
-        AND drug_era_concept_id != 0
+        AND drug_concept_id != 0
 ), cte3 as (
     SELECT *,
         case
