@@ -86,6 +86,7 @@ exportResults <- function(
       min_cell_count = smallCellCount,
       analysis_ids = analysisIds,
       de_results_table = 'dashboard_export_results',
+      de_results_table_dist = 'dashboard_export_results_dist',
       package_version = utils::packageVersion(pkg = "DashboardExport")
     )
 
