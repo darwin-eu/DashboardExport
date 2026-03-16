@@ -147,6 +147,27 @@ dashboardExport <- function(
     cdmVersion <- .getCdmVersion(connectionDetails, cdmDatabaseSchema)
   }
 
+  renderedSql <- SqlRender::render(
+    "SELECT COUNT(*) AS n FROM @cdm_database_schema.cdm_source;",
+    cdm_database_schema = cdmDatabaseSchema
+  )
+
+  translatedSql <- SqlRender::translate(
+    renderedSql,
+    targetDialect = connectionDetails$dbms
+  )
+
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  cdm_source_count <- as.numeric(DatabaseConnector::querySql(connection, translatedSql)$n[1])
+
+  if (cdm_source_count > 1) {
+    ParallelLogger::logWarn(
+      sprintf("CDM Source Check: Found %d rows in cdm_source where only one is expected. Using the row with the latest cdm_release_date.",
+      cdm_source_count)
+    )
+  }
+  DatabaseConnector::disconnect(connection = connection)
+
   .executeDEAnalyses(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
