@@ -1,3 +1,13 @@
+# DashboardExport v2.0.0
+
+* Allow use of DBI Connection Details
+* Compatibility with DatabaseConnector v7
+* Add episode analyses
+* Age and Gender stratification for drug era
+* Handle multiple or duplicate cdm_source records
+* Rounding to 10s for records per month
+* Remove need for analysis 117
+
 # DashboardExport v1.3.1
 
 * Fix for episode queries
