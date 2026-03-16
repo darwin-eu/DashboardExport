@@ -18,7 +18,6 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 111,Number of persons by observation period start month,analysis_results,calendar month,,,,,"data_density,records_per_person"
 112,Number of persons by observation period end month,analysis_results,calendar month,,,,,
 113,Number of persons by number of observation periods,analysis_results,number of observation periods,,,,,number_of_observation_periods
-117,Number of persons with at least one day of observation in each month,analysis_results,calendar month,,,,,records_per_person
 200,"Number of persons with at least one visit occurrence, by visit_concept_id",analysis_results,visit_concept_id,,,,,"visit_type_bar_chart,visit_type_table,domain_filter"
 201,"Number of visit occurrence records, by visit_concept_id",analysis_results,visit_concept_id,,,,,"avg_num_of_records_per_person,avg_num_of_records_per_person,data_domain_total_num_of_records,data_domain_total_num_of_records,visit_type_table,domain_filter"
 202,"Number of persons by visit occurrence start month, by visit_concept_id",analysis_results,visit_concept_id,calendar month,,,,
