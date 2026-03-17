@@ -5,7 +5,8 @@
 <!-- badges: end -->
 
 Export descriptive statistics from a subset of Achilles results for the DARWIN-EU Database Dashboard.
-All counts are rounded up to nearest hundred and counts below the `smallCellCount` are not exported.
+Counts are rounded up to nearest hundred, except for counts stratified by month which are rounded up to nearest 10.
+Counts below the `smallCellCount` are not exported.
 For an overview of the exported Achilles analyses, see [required_analysis_ids.csv](inst/csv/required_analysis_ids.csv).
 
 Publicly available repo available on (DARWIN-EU/DashboardExport)[https://github.com/darwin-eu/DashboardExport]

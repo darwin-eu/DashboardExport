@@ -1,31 +1,30 @@
 Package: DashboardExport
-Title: Export Achilles results for the DARWIN Database Dashboard
-Version: 1.3.1
+Title: Create a CSV Export with Characteristics of a Database in the OMOP CDM
+Version: 1.4.0
 Authors@R:
   c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0001-8473-2433")),
     person(given = "Sofia", family = "Bazakou",email = "sofia@thehyve.nl", role = "aut")
    )
 Maintainer: Maxim Moinat <m.moinat@erasmusmc.nl>
-Description: Exports Achilles results for the DARWIN Database Dashboard.
+Description: Runs a set of bespoke analyses, combining with existing results from Achilles to a CSV Export. The export can be used to create a dashboard with the characteristics of a database in the OMOP CDM.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.3
 Depends: 
-  R (>= 4.0.0)
+  R (>= 4.2.0)
 Imports:
-  DatabaseConnector (>= 5.0.0),
+  DatabaseConnector (>= 7.0.0),
   ParallelLogger,
   SqlRender,
   readr
 Suggests:
-  Achilles,
+  Achilles (>= 1.7.2),
   testthat (>= 3.0.0),
   CDMConnector,
   duckdb,
   devtools,
-  withr
-Remotes:
-  OHDSI/Achilles
+  withr,
+  DBI (>= 1.3.0)
 Config/testthat/edition: 3

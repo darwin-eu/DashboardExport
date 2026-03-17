@@ -1,4 +1,9 @@
 -- CDM Source
+WITH ranked_cdm_source AS (
+    SELECT *,
+       ROW_NUMBER() OVER (ORDER BY cdm_release_date DESC) AS rn
+    FROM @cdm_database_schema.cdm_source
+)
 INSERT INTO @results_database_schema.@results_table
     SELECT
         5000 as analysis_id,
@@ -8,10 +13,11 @@ INSERT INTO @results_database_schema.@results_table
         cdm_version as stratum_4,
         vocabulary.vocabulary_version as stratum_5,
         999 as count_value -- needs to be > min_cell_count to pass export
-    FROM @cdm_database_schema.cdm_source
+    FROM ranked_cdm_source
     cross join (
         select vocabulary_version 
         from @cdm_database_schema.vocabulary
         where vocabulary_id = 'None'
     ) vocabulary
+    WHERE rn = 1
 ;

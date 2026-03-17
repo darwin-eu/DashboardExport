@@ -86,10 +86,11 @@ exportResults <- function(
       min_cell_count = smallCellCount,
       analysis_ids = analysisIds,
       de_results_table = 'dashboard_export_results',
+      de_results_table_dist = 'dashboard_export_results_dist',
       package_version = utils::packageVersion(pkg = "DashboardExport")
     )
 
-    ParallelLogger::logInfo("Exporting achilles_results, achilles_results_dist and dashboard_export_results...")
+    ParallelLogger::logInfo("Exporting achilles_results, achilles_results_dist, dashboard_export_results, dashboard_export_results_dist...")
     DatabaseConnector::querySql(
       connection = connection,
       sql = sql

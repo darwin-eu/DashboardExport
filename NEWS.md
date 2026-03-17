@@ -1,21 +1,35 @@
+# DashboardExport v1.4.0
+
+## Enhancements
+* Add achilles analyses for count by concept id by month
+* Add custom analyses on episode table
+* Add custom analyses age and gender stratification for drug era
+* Rounding to 10s for records per month
+
+## Fixes
+* Compatibility with DatabaseConnector v7
+* Allow use of DBI Connection Details
+* Handle multiple or duplicate cdm_source records
+* Remove need for analysis 117
+
 # DashboardExport v1.3.1
 
 * Fix for episode queries
 
 # DashboardExport v1.3.0
 
-* Adds analyses for the v5.4 episode table
-* Adds analyses for fact_relationship table 
-* Adds analyses 10 and 11 for persons by year_of_birth and gender
+* Add analyses for the v5.4 episode table
+* Add analyses for fact_relationship table 
+* Add analyses 10 and 11 for persons by year_of_birth and gender
 * Fix for ICH age groups; remove other category
 
 # DashboardExport v1.2.1
 
-* Adds ability to bypass warning when required Achilles analyses are missing.
+* Add ability to bypass warning when required Achilles analyses are missing.
 
 # DashboardExport v1.2.0
 
-* include achilles analysis 822, 1822, 900, 1000 by @SofiaMp in #36
+* Add achilles analysis 822, 1822, 900, 1000 by @SofiaMp in #36
 * Add analysis 444 - dpc by @MaximMoinat in #41
 * Setup tests and github actions by @MaximMoinat in #37
 * remove vocab schema from files by @SofiaMp in #42
