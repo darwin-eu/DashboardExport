@@ -1,6 +1,6 @@
 Package: DashboardExport
 Title: Create a CSV Export with Characteristics of a Database in the OMOP CDM
-Version: 2.0.0
+Version: 1.4.0
 Authors@R:
   c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0001-8473-2433")),
@@ -13,7 +13,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends: 
-  R (>= 4.0.0)
+  R (>= 4.2.0)
 Imports:
   DatabaseConnector (>= 7.0.0),
   ParallelLogger,
