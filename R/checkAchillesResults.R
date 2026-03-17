@@ -20,7 +20,7 @@
 # @author Maxim Moinat
 
 .checkAchillesTablesExist <- function(connectionDetails, resultsDatabaseSchema) {
-  required_achilles_tables <- c("achilles_analysis", "achilles_results", "achilles_results_dist")
+  required_achilles_tables <- c("achilles_results", "achilles_results_dist")
 
   connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection = connection))

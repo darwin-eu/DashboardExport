@@ -18,7 +18,7 @@ connectionDetails <- DatabaseConnector::createDbiConnectionDetails(
   port = Sys.getenv("DB_PORT"),
   dbname = Sys.getenv("DB_NAME"),
   user = Sys.getenv("DB_USER"),
-  password = Sys.getenv("DB_PASSWORD"),
+  password = Sys.getenv("DB_PASSWORD")
 )
 
 cdmDatabaseSchema <- Sys.getenv("CDM_SCHEMA")
