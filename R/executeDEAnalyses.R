@@ -47,10 +47,10 @@
   ParallelLogger::logInfo(sprintf('Executing DashboardExport analyses, writing to %s.%s and %s.%s', resultsDatabaseSchema, resultsTable, resultsDatabaseSchema, resultsTableDist))
   # Execute DashboardExport Analyses
   analysisDetails <- .readRequiredAnalyses()
-  analysesIdsToExecute <- analysisDetails[analysisDetails$source == 'custom', 'analysis_id']
+  analysesIdsToExecute <- analysisDetails[analysisDetails$source %in% c('custom', 'custom_dist'), 'analysis_id']
   for (analysisId in analysesIdsToExecute) {
     # Skip episode queries for older cdm versions
-    if (floor(analysisId / 100) == 23 && cdmVersion != '5.4') {
+    if (compareVersion(cdmVersion, '5.4') == -1 && floor(analysisId / 100) == 23) {
       ParallelLogger::logInfo(sprintf(
         "Analysis %d (%s) -- SKIPPED",
         analysisId,
