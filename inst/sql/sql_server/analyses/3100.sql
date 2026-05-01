@@ -1,5 +1,4 @@
 -- 3100	Number of persons by pregnancy outcome
-
 INSERT INTO @results_database_schema.@results_table
 SELECT 
 	3100 AS analysis_id,

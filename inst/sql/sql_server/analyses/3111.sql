@@ -1,5 +1,4 @@
 -- 3111 Distribution of length of pregnancy in days
-
 with cte as (
   SELECT 
     pet.gestational_length_in_day AS count_value

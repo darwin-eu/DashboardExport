@@ -1,28 +1,20 @@
--- 3106 Distribution of age at first pregnancy
+-- 3156 Number of pregnancies per person
 with cte as (
-  SELECT 
-    pet.pregnancy_start_year - p.year_of_birth AS count_value
+  SELECT
+    pet.person_id,
+    COUNT(*) AS count_value
   FROM 
-    @cdm_database_schema.person p
-  JOIN (
-    SELECT 
-      pet.person_id
-      MIN(YEAR(pet.pregnancy_start_date)) AS pregnancy_start_year
-    FROM 
-      @cdm_database_schema.pregnancy pet
-    -- JOIN 
-    --   @cdm_database_schema.observation_period op 
-    -- ON 
-    --   pet.person_id = op.person_id
-    -- AND 
-    --   pet.pregnancy_start_date >= op.observation_period_start_date
-    -- AND 
-    --   pet.pregnancy_start_date <= op.observation_period_end_date
-    GROUP BY 
-      pet.person_id
-    ) pet 
-  ON 
-    p.person_id = pet.person_id
+    @cdm_database_schema.pregnancy pet
+  -- JOIN 
+  --   @cdm_database_schema.observation_period op 
+  -- ON 
+  --   pet.person_id = op.person_id
+  -- AND 
+  --   pet.pregnancy_start_date >= op.observation_period_start_date
+  -- AND 
+  --   pet.pregnancy_start_date <= op.observation_period_end_date
+  GROUP BY 
+    pet.person_id
 ), overallStats as
 (
   SELECT
@@ -54,7 +46,7 @@ priorStats (count_value, total, accumulated) as
 )
 INSERT INTO @results_database_schema.@results_table_dist
 SELECT 
-  3106 as analysis_id,
+  3156 as analysis_id,
   CAST(NULL AS VARCHAR(255)) AS stratum_1,
   CAST(NULL AS VARCHAR(255)) AS stratum_2,
   CAST(NULL AS VARCHAR(255)) AS stratum_3,
