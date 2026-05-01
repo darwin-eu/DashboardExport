@@ -148,4 +148,9 @@ analysis_id,description,source,stratum_1_name,stratum_2_name,stratum_3_name,stra
 2342,Number of records by episode_concept_id by age decile,custom,episode_concept_id,age decile,,,,
 2343,Number of records by episode_concept_id by ICH age group,custom,episode_concept_id,ich age group,,,,
 3001,"Number of fact relationship records, by relationship_concept_id",custom,relationship_concept_id,,,,,
+3100,Number of persons by pregnancy outcome,custom,pregnancy_outcome,,,,,
+3101,Number of records by pregnancy outcome,custom,pregnancy_outcome,,,,,
+3106,Distribution of age,custom_dist,,,,,,
+3111,Distribution of length of pregnancy in days,custom_dist,,,,,,
+3120,Number of records by start month,custom,calendar month,,,,,
 5000,First record from the cdm_source table,custom,Source Release date,CDM Release date,CDM version,Vocabulary version,,meta_data_table
