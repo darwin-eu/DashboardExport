@@ -1,4 +1,4 @@
--- 3120	Number of records by start month
+-- 3120	Number of pregnancy records by start month
 WITH rawData AS (
   SELECT 
     YEAR(pet.pregnancy_start_date) * 100 + MONTH(pet.pregnancy_start_date) AS stratum_1,

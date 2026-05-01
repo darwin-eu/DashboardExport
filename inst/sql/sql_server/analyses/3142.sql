@@ -1,9 +1,24 @@
--- 3142 Number of records by age decile
+-- 3143 Number of pregnancy records by age decile
 INSERT INTO @results_database_schema.@results_table
 SELECT
-  3142 AS analysis_id,
-  CAST(NULL AS VARCHAR(255)) AS stratum_1,
-  FLOOR((YEAR(pet.pregnancy_start_date) - p.year_of_birth) / 10) AS stratum_2,
+  3143 AS analysis_id,
+  DATEDIFF(yy, pet.pregnancy_start_date,
+    COALESCE(
+      CAST(p.birth_datetime AS DATE), 
+      CAST(CONCAT(
+          p.year_of_birth,
+          COALESCE(
+              RIGHT('0' + CAST(p.month_of_birth AS VARCHAR), 2),
+              '01'
+          ),
+          COALESCE(
+              RIGHT('0' + CAST(p.day_of_birth AS VARCHAR), 2),
+              '01'
+          )
+      ) AS DATE)
+    )
+  ) / 10 AS stratum_1,
+  CAST(NULL AS VARCHAR(255)) AS stratum_2,
   CAST(NULL AS VARCHAR(255)) AS stratum_3,
   CAST(NULL AS VARCHAR(255)) AS stratum_4,
   CAST(NULL AS VARCHAR(255)) AS stratum_5,

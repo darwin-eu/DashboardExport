@@ -1,28 +1,34 @@
--- 3106 Distribution of age at first pregnancy
+-- 3106 Distribution of age at pregnancy start
 with cte as (
   SELECT 
-    pet.pregnancy_start_year - p.year_of_birth AS count_value
-  FROM 
-    @cdm_database_schema.person p
-  JOIN (
-    SELECT 
-      pet.person_id
-      MIN(YEAR(pet.pregnancy_start_date)) AS pregnancy_start_year
-    FROM 
-      @cdm_database_schema.pregnancy pet
-    -- JOIN 
-    --   @cdm_database_schema.observation_period op 
-    -- ON 
-    --   pet.person_id = op.person_id
-    -- AND 
-    --   pet.pregnancy_start_date >= op.observation_period_start_date
-    -- AND 
-    --   pet.pregnancy_start_date <= op.observation_period_end_date
-    GROUP BY 
-      pet.person_id
-    ) pet 
-  ON 
-    p.person_id = pet.person_id
+    pet.person_id,
+    DATEDIFF(yy, pet.pregnancy_start_date,
+      COALESCE(
+        CAST(p.birth_datetime AS DATE), 
+        CAST(CONCAT(
+            p.year_of_birth,
+            COALESCE(
+                RIGHT('0' + CAST(p.month_of_birth AS VARCHAR), 2),
+                '01'
+            ),
+            COALESCE(
+                RIGHT('0' + CAST(p.day_of_birth AS VARCHAR), 2),
+                '01'
+            )
+        ) AS DATE)
+      )
+    ) AS count_value
+  FROM
+    @cdm_database_schema.pregnancy pet
+  JOIN @cdm_database_schema.person p on pet.person_id = p.person_id
+  -- JOIN 
+  --   @cdm_database_schema.observation_period op 
+  -- ON 
+  --   pet.person_id = op.person_id
+  -- AND 
+  --   pet.pregnancy_start_date >= op.observation_period_start_date
+  -- AND 
+  --   pet.pregnancy_start_date <= op.observation_period_end_date
 ), overallStats as
 (
   SELECT
