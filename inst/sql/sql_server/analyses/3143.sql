@@ -31,5 +31,5 @@ JOIN @cdm_database_schema.pregnancy pet
 --   AND pet.pregnancy_start_date >= op.observation_period_start_date
 --   AND pet.pregnancy_start_date <= op.observation_period_end_date
 GROUP BY
-  FLOOR((YEAR(pet.pregnancy_start_date) - p.year_of_birth) / 10)
+  stratum_1
 ;

@@ -55,7 +55,7 @@ priorStats (count_value, total, accumulated) as
     s.total,
     sum(p.total) as accumulated
   FROM statsView s
-  JOIN statsView p on s.stratum1_id = p.stratum1_id and s.stratum2_id = p.stratum2_id and p.rn <= s.rn
+  JOIN statsView p on p.rn <= s.rn
   GROUP BY s.count_value, s.total, s.rn
 )
 INSERT INTO @results_database_schema.@results_table_dist
@@ -77,6 +77,6 @@ SELECT
 	MIN(case when p.accumulated >= .75 * o.total then count_value else o.max_value end) as p75_value,
 	MIN(case when p.accumulated >= .90 * o.total then count_value else o.max_value end) as p90_value
 FROM priorStats p
-JOIN overallStats o on p.stratum1_id = o.stratum1_id and p.stratum2_id = o.stratum2_id 
+CROSS JOIN overallStats o
 GROUP BY o.total, o.min_value, o.max_value, o.avg_value, o.stdev_value
 ;
