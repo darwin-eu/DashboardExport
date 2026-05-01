@@ -5,10 +5,10 @@ WITH rawData AS (
     YEAR(pet.pregnancy_start_date) * 100 + MONTH(pet.pregnancy_start_date) AS stratum_1,
     COUNT_BIG(pet.person_id) AS count_value
   FROM @cdm_database_schema.pregnancy pet
-  JOIN @cdm_database_schema.observation_period op 
-    ON pet.person_id = op.person_id
-    AND pet.pregnancy_start_date >= op.observation_period_start_date
-    AND pet.pregnancy_start_date <= op.observation_period_end_date
+  -- JOIN @cdm_database_schema.observation_period op 
+  --   ON pet.person_id = op.person_id
+  --   AND pet.pregnancy_start_date >= op.observation_period_start_date
+  --   AND pet.pregnancy_start_date <= op.observation_period_end_date
   GROUP BY 
     YEAR(pet.pregnancy_start_date) * 100 + MONTH(pet.pregnancy_start_date)
 )

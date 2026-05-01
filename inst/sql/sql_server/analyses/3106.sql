@@ -11,14 +11,14 @@ with cte as (
       MIN(YEAR(pet.pregnancy_start_date)) AS pregnancy_start_year
     FROM 
       @cdm_database_schema.pregnancy pet
-    JOIN 
-      @cdm_database_schema.observation_period op 
-    ON 
-      pet.person_id = op.person_id
-    AND 
-      pet.pregnancy_start_date >= op.observation_period_start_date
-    AND 
-      pet.pregnancy_start_date <= op.observation_period_end_date
+    -- JOIN 
+    --   @cdm_database_schema.observation_period op 
+    -- ON 
+    --   pet.person_id = op.person_id
+    -- AND 
+    --   pet.pregnancy_start_date >= op.observation_period_start_date
+    -- AND 
+    --   pet.pregnancy_start_date <= op.observation_period_end_date
     GROUP BY 
       pet.person_id
     ) pet 

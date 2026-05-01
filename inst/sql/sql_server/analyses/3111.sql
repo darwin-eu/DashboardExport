@@ -5,14 +5,14 @@ with cte as (
     pet.gestational_length_in_day AS count_value
   FROM 
     @cdm_database_schema.pregnancy pet
-  JOIN 
-    @cdm_database_schema.observation_period op 
-  ON 
-    pet.person_id = op.person_id
-  AND 
-    pet.pregnancy_start_date >= op.observation_period_start_date
-  AND 
-    pet.pregnancy_start_date <= op.observation_period_end_date
+  -- JOIN 
+  --   @cdm_database_schema.observation_period op 
+  -- ON 
+  --   pet.person_id = op.person_id
+  -- AND 
+  --   pet.pregnancy_start_date >= op.observation_period_start_date
+  -- AND 
+  --   pet.pregnancy_start_date <= op.observation_period_end_date
 ), overallStats as
 (
   SELECT
