@@ -36,7 +36,7 @@
     sql_translated <- SqlRender::translate(sql_rendered, targetDialect = connectionDetails$dbms)
 
     result <- tryCatch({
-      df <- DatabaseConnector::querySql(connection, sql_translated)
+      df <- DatabaseConnector::querySql(connection, sql_translated, snakeCaseToCamelCase = TRUE)
       df$n[1]
     }, error = function(e) {
       NA

@@ -1,3 +1,13 @@
+# DashboardExport v1.5.0
+
+## Enhancements
+* Add 13 custom analyses against forthe PET pregnancy and infant table
+
+## Fixes
+* Re-adding support for DatabaseConnector v6.0
+* Fix execution of custom_dist analyses
+
+
 # DashboardExport v1.4.0
 
 ## Enhancements

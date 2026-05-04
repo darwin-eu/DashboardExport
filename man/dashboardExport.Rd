@@ -47,6 +47,9 @@ If the path does not exist, it is created. Defaults to 'output'.}
 
 \item{verboseMode}{(OPTIONAL) Boolean to determine if the console will show all execution steps. Default = TRUE}
 }
+\value{
+dataframe of exported results (invisibly)
+}
 \description{
 \code{dashboardExport} exports a set of descriptive statistics summary from the CDM,
 to be uploaded in the Database Dashboard.

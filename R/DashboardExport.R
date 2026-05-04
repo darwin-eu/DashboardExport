@@ -56,6 +56,7 @@
 #' @param databaseId               (OPTIONAL) Name of the source, used in the filename exported. If not given, it is retrieved from cdm_source table.
 #' @param cdmVersion               (OPTIONAL) Version number of the OMOP CDM. If not given, it is retrieved from cdm_source table.
 #' @param verboseMode              (OPTIONAL) Boolean to determine if the console will show all execution steps. Default = TRUE
+#' @return dataframe of exported results (invisibly)
 #' @examples
 #' \dontrun{
 #' connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")
@@ -158,7 +159,7 @@ dashboardExport <- function(
   )
 
   connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-  cdm_source_count <- as.numeric(DatabaseConnector::querySql(connection, translatedSql)$n[1])
+  cdm_source_count <- as.numeric(DatabaseConnector::querySql(connection, translatedSql, snakeCaseToCamelCase = TRUE)$n[1])
 
   if (cdm_source_count > 1) {
     ParallelLogger::logWarn(
@@ -177,7 +178,7 @@ dashboardExport <- function(
   )
 
   # Query and write results
-  exportResults(
+  results <- exportResults(
     connectionDetails = connectionDetails,
     cdmDatabaseSchema = cdmDatabaseSchema,
     resultsDatabaseSchema = resultsDatabaseSchema,
@@ -186,7 +187,7 @@ dashboardExport <- function(
     outputFolder = outputFolder,
     databaseId = databaseId
   )
-  invisible()
+  invisible(results)
 }
 
 
