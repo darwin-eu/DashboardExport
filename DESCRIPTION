@@ -1,6 +1,6 @@
 Package: DashboardExport
 Title: Create a CSV Export with Characteristics of a Database in the OMOP CDM
-Version: 1.4.0.900
+Version: 1.5.0
 Authors@R:
   c(person(given = "Maxim", family = "Moinat", email = "m.moinat@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0001-8473-2433")),
@@ -18,7 +18,8 @@ Imports:
   DatabaseConnector (>= 6.0.0),
   ParallelLogger,
   SqlRender,
-  readr
+  readr,
+  utils
 Suggests:
   Achilles (>= 1.7.2),
   testthat (>= 3.0.0),

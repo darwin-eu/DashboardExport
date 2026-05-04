@@ -42,6 +42,9 @@ Default = 5.}
 
 \item{analysisIds}{List of analysis ids to export. Default is to export all analyses.}
 }
+\value{
+dataframe of exported results (invisibly)
+}
 \description{
 Export Achilles and DashboardExport analysis results to a single csv file.
 }
