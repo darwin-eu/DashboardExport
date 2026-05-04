@@ -43,6 +43,7 @@
 #'                                 (<= smallCellCount) are deleted. Set to NULL if you don't want any deletions.
 #'                                 Default = 5.
 #' @param analysisIds              List of analysis ids to export. Default is to export all analyses.
+#' @return dataframe of exported results (invisibly)
 #' @examples
 #' \dontrun{
 #' connectionDetails <- createConnectionDetails(dbms="sql server", server="your_server")
@@ -116,5 +117,5 @@ exportResults <- function(
   )
   readr::write_csv(results, outputPath)
   ParallelLogger::logInfo(sprintf("Results written to %s", outputPath))
-  invisible()
+  invisible(results)
 }

@@ -44,20 +44,25 @@
     progressBar = FALSE,
     reportOverallTime = FALSE
   )
-  ParallelLogger::logInfo(sprintf('Executing DashboardExport analyses, writing to %s.%s and %s.%s', resultsDatabaseSchema, resultsTable, resultsDatabaseSchema, resultsTableDist))
+
   # Execute DashboardExport Analyses
   analysisDetails <- .readRequiredAnalyses()
   analysesIdsToExecute <- analysisDetails[analysisDetails$source %in% c('custom', 'custom_dist'), 'analysis_id']
+
+  # Skip episode queries for older cdm versions
+  if (compareVersion(cdmVersion, '5.4') == -1) {
+    ParallelLogger::logInfo("Skipping episode analyses as CDM version is older than 5.4.")
+    analysesIdsToExecute <- analysesIdsToExecute[floor(analysesIdsToExecute / 100) != 23]    
+  }
+
+  # Skip PET queries if pregnancy table not found
+  if (!.checkPregnancyTableExists(connection, cdmDatabaseSchema)) {
+    ParallelLogger::logInfo("Skippping PET analyses as pregnancy table not found in CDM database.")
+    analysesIdsToExecute <- analysesIdsToExecute[floor(analysesIdsToExecute / 100) != 31]
+  }
+  
+  ParallelLogger::logInfo(sprintf('Starting execution of %d DashboardExport analyses, writing to %s.%s and %s.%s', length(analysesIdsToExecute), resultsDatabaseSchema, resultsTable, resultsDatabaseSchema, resultsTableDist))
   for (analysisId in analysesIdsToExecute) {
-    # Skip episode queries for older cdm versions
-    if (compareVersion(cdmVersion, '5.4') == -1 && floor(analysisId / 100) == 23) {
-      ParallelLogger::logInfo(sprintf(
-        "Analysis %d (%s) -- SKIPPED",
-        analysisId,
-        analysisDetails[analysisDetails$analysis_id == analysisId, 'description']
-      ))
-      next
-    }
     ParallelLogger::logInfo(sprintf(
       "Analysis %d (%s) -- START",
       analysisId,
@@ -86,4 +91,17 @@
       ParallelLogger::logError(sprintf("Analysis %d -- ERROR %s", analysisId, e))
     })
   }
+}
+
+.checkPregnancyTableExists <- function(connection, cdmDatabaseSchema) {
+  # Check if PET tables exist in the CDM database
+  tryCatch({
+    DatabaseConnector::querySql(
+      connection, 
+      SqlRender::render("SELECT * FROM @cdmDatabaseSchema.pregnancy", cdmDatabaseSchema = cdmDatabaseSchema)
+    )
+    return(TRUE)
+  }, error = function(e) {
+    return(FALSE)
+  })
 }
