@@ -34,16 +34,20 @@
   connection <- DatabaseConnector::connect(connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection))
 
-  sql_rendered <- SqlRender::render(
-    "select * from @schema.cdm_source",
-    schema = cdmDatabaseSchema,
-    table = table
+  query <- SqlRender::translate(
+    SqlRender::render(
+      "select * from @schema.cdm_source",
+      schema = cdmDatabaseSchema
+    ),
+    targetDialect = connectionDetails$dbms
   )
 
-  sql_translated <- SqlRender::translate(sql_rendered, targetDialect = connectionDetails$dbms)
-
   cdmSource <- tryCatch({
-    DatabaseConnector::querySql(connection, sql_translated, snakeCaseToCamelCase = TRUE)
+    DatabaseConnector::querySql(
+      connection,
+      query,
+      snakeCaseToCamelCase = TRUE
+    )
   }, error = function(e) {
     NULL
   })
