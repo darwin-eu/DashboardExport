@@ -1,3 +1,9 @@
+# DashboardExport v1.5.1
+
+## Fixes
+* Check for cdm_source table, and stop if it is not populated.
+* Order results by analysis id; 0, 5000, rest
+
 # DashboardExport v1.5.0
 
 ## Enhancements
