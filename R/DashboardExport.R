@@ -1,6 +1,6 @@
 # @file DashboardExport
 #
-# Copyright 2023 Darwin EU Coordination Center
+# Copyright 2026 Darwin EU Coordination Center
 #
 # This file is part of the DashboardExport package
 #
@@ -97,6 +97,23 @@ dashboardExport <- function(
       )
     )
     on.exit(ParallelLogger::unregisterLogger("DEFAULT_CONSOLE_LOGGER"), add = TRUE)
+  }
+
+  # Check CdmSource is populated
+  cdmSource <- .getCdmSource(connectionDetails, cdmDatabaseSchema)
+
+  if (is.null(cdmSource) || nrow(cdmSource) == 0) {
+    ParallelLogger::logError(sprintf(
+      "A populated cdm_source table is required for CdmOnboarding to run. Are your CDM tables in the '%s' schema?",
+      cdmDatabaseSchema
+    ))
+    ParallelLogger::logError("No records found in the cdm_source table. Please populate the table.")
+    stop()
+  }
+
+  if (nrow(cdmSource) > 1) {
+    ParallelLogger::logWarn("Multiple records found in the cdm_source table. The first record is used.")
+    cdmSource <- cdmSource[1, ]
   }
 
   ParallelLogger::logInfo(sprintf("Checking that Achilles results are available in schema '%s'", achillesDatabaseSchema))

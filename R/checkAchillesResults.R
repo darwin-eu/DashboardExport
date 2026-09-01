@@ -1,6 +1,6 @@
 # @file R/Achilles_checks.R
 #
-# Copyright 2023 Darwin EU Coordination Center
+# Copyright 2026 Darwin EU Coordination Center
 #
 # This file is part of the DashboardExport package
 #
@@ -22,8 +22,8 @@
 .checkAchillesTablesExist <- function(connectionDetails, resultsDatabaseSchema) {
   required_achilles_tables <- c("achilles_results", "achilles_results_dist")
 
-  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-  on.exit(DatabaseConnector::disconnect(connection = connection))
+  connection <- DatabaseConnector::connect(connectionDetails)
+  on.exit(DatabaseConnector::disconnect(connection))
 
   achilles_tables_exist <- TRUE
   for (table in required_achilles_tables) {
@@ -35,27 +35,35 @@
 
     sql_translated <- SqlRender::translate(sql_rendered, targetDialect = connectionDetails$dbms)
 
-    result <- tryCatch({
+    row_count <- tryCatch({
       df <- DatabaseConnector::querySql(connection, sql_translated, snakeCaseToCamelCase = TRUE)
       df$n[1]
     }, error = function(e) {
       NA
     })
 
-    if (is.na(result)) {
+    if (is.na(row_count)) {
       ParallelLogger::logWarn(sprintf(
         "Achilles table '%s.%s' has not been found.",
         resultsDatabaseSchema,
         table
       ))
       achilles_tables_exist <- FALSE
-    } else if (result == 0) {
+    } else if (row_count == 0) {
       ParallelLogger::logWarn(sprintf(
         "Achilles table '%s.%s' is empty.",
         resultsDatabaseSchema,
         table
       ))
       achilles_tables_exist <- FALSE
+    } else if (row_count < 500) {
+      # Just a warning if row count low
+      ParallelLogger::logWarn(sprintf(
+        "Achilles table '%s.%s' contains only %d rows. Have all analyses been run?",
+        resultsDatabaseSchema,
+        table,
+        row_count
+      ))
     }
   }
   return(achilles_tables_exist)

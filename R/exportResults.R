@@ -1,6 +1,6 @@
 # @file executeDEAnalyses.R
 #
-# Copyright 2023 Darwin EU Coordination Center
+# Copyright 2026 Darwin EU Coordination Center
 #
 # This file is part of the DashboardExport package
 #
@@ -109,6 +109,13 @@ exportResults <- function(
   if (is.null(results)) {
     return(NULL)
   }
+
+  # Order results, first 0, then 5000, then rest
+  rank <- rep(99, nrow(results))
+  rank[results$analysis_id == 0]     <- 1
+  rank[results$analysis_id == 5000]  <- 2
+
+  results <- results[order(rank, results$analysis_id), ]
 
   # Save the data to the export folder
   outputPath <- file.path(
