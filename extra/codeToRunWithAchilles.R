@@ -33,6 +33,15 @@ resultsDatabaseSchema <- Sys.getenv("RESULTS_SCHEMA")
 outputFolder <- "output"
 databaseId <- Sys.getenv("DATABASE_ID")
 
+# Achilles is required. Use the following to run only the minimally required Achilles analyses:
+Achilles::achilles(
+    connectionDetails = connectionDetails, 
+    cdmDatabaseSchema = cdmDatabaseSchema,
+    resultsDatabaseSchema = resultsDatabaseSchema, 
+    outputFolder = "achilles_output",
+    analysisIds = DashboardExport::getRequiredAnalysisIds()
+)
+
 DashboardExport::dashboardExport(
   connectionDetails = connectionDetails,
   cdmDatabaseSchema = cdmDatabaseSchema,
