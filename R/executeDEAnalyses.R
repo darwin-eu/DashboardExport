@@ -20,32 +20,10 @@
 # @author Maxim Moinat
 
 .executeDEAnalyses <- function(connectionDetails, cdmDatabaseSchema, resultsDatabaseSchema, outputFolder, cdmVersion) {
-  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
-  on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
-  # Create DashboardExport results table. Drop if exists.
-  resultsTable <- 'dashboard_export_results'
-  resultsTableDist = paste0(resultsTable, '_dist')
-  ParallelLogger::logInfo(sprintf('Creating results table %s.%s and %s.%s', resultsDatabaseSchema, resultsTable, resultsDatabaseSchema, resultsTableDist))
-  ddl_sql <- SqlRender::loadRenderTranslateSql(
-    sqlFilename = 'dashboardExportResults_DDL.sql',
-    packageName = "DashboardExport",
-    dbms = connectionDetails$dbms,
-    results_database_schema = resultsDatabaseSchema,
-    results_table = resultsTable,
-    results_table_dist = resultsTableDist
-  )
-  DatabaseConnector::executeSql(
-    connection = connection,
-    sql = ddl_sql,
-    errorReportFile = file.path(
-      outputFolder,
-      paste0("dashboardExportError_ddl.txt")
-    ),
-    progressBar = FALSE,
-    reportOverallTime = FALSE
-  )
+  # Recreate results tables
+  .createDEResultsTables(connectionDetails, resultsDatabaseSchema)
 
-  # Execute DashboardExport Analyses
+  # Select DashboardExport Analyses
   analysisDetails <- .readRequiredAnalyses()
   analysesIdsToExecute <- analysisDetails[analysisDetails$source %in% c('custom', 'custom_dist'), 'analysis_id']
 
@@ -56,12 +34,16 @@
   }
 
   # Skip PET queries if pregnancy table not found
-  if (!.checkPregnancyTableExists(connection, cdmDatabaseSchema)) {
+  if (!.checkPregnancyTableExists(connectionDetails, cdmDatabaseSchema)) {
     ParallelLogger::logInfo("Skippping PET analyses as pregnancy table not found in CDM database.")
     analysesIdsToExecute <- analysesIdsToExecute[floor(analysesIdsToExecute / 100) != 31]
   }
   
+  # Execute DashboardExport Analyses
   ParallelLogger::logInfo(sprintf('Starting execution of %d DashboardExport analyses, writing to %s.%s and %s.%s', length(analysesIdsToExecute), resultsDatabaseSchema, resultsTable, resultsDatabaseSchema, resultsTableDist))
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
+
   for (analysisId in analysesIdsToExecute) {
     ParallelLogger::logInfo(sprintf(
       "Analysis %d (%s) -- START",
@@ -93,8 +75,38 @@
   }
 }
 
-.checkPregnancyTableExists <- function(connection, cdmDatabaseSchema) {
-  # Check if PET tables exist in the CDM database
+#' Create DashboardExport results tables. Drop if exists.
+.createDEResultsTables <- function(connectionDetails, resultsDatabaseSchema) {
+  connection <- DatabaseConnector::connect(connectionDetails = connectionDetails)
+  on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
+
+  # Assign in parent environment so that it can be used in .executeDEAnalyses
+  resultsTable <<- 'dashboard_export_results'
+  resultsTableDist <<- paste0(resultsTable, '_dist')
+  ParallelLogger::logInfo(sprintf('Creating results table %s.%s and %s.%s', resultsDatabaseSchema, resultsTable, resultsDatabaseSchema, resultsTableDist))
+  ddl_sql <- SqlRender::loadRenderTranslateSql(
+    sqlFilename = 'dashboardExportResults_DDL.sql',
+    packageName = "DashboardExport",
+    dbms = connectionDetails$dbms,
+    results_database_schema = resultsDatabaseSchema,
+    results_table = resultsTable,
+    results_table_dist = resultsTableDist
+  )
+
+  DatabaseConnector::executeSql(
+    connection = connection,
+    sql = ddl_sql,
+    errorReportFile = "dashboardExportError_ddl.txt",
+    progressBar = FALSE,
+    reportOverallTime = FALSE
+  )
+}
+
+#' Check if PET tables exist in the CDM database
+.checkPregnancyTableExists <- function(connectionDetails, cdmDatabaseSchema) {
+  connection <- DatabaseConnector::connect(connectionDetails)
+  on.exit(DatabaseConnector::disconnect(connection))
+
   tryCatch({
     DatabaseConnector::querySql(
       connection, 

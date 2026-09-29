@@ -1,3 +1,8 @@
+# DashboardExport v1.5.2
+
+## Fixes
+* Fix for PET tables check that aborts transaction.
+
 # DashboardExport v1.5.1
 
 ## Fixes
